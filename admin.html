@@ -479,6 +479,53 @@
             box-shadow: var(--shadow);
         }
 
+        /* Stili per la sezione Temi */
+        .theme-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-select-theme {
+            background-color: var(--color-gold);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-select-theme:hover {
+            background-color: #c19d2e;
+            transform: scale(1.05);
+        }
+
+        .color-input-group {
+            margin-bottom: 15px;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            background-color: white;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--color-gold);
+        }
+
+        /* Badge per temi */
+        .badge {
+            background-color: var(--color-gold);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .admin-content {
@@ -509,6 +556,14 @@
             
             .gallery-actions .btn {
                 width: 100%;
+            }
+
+            .themes-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .color-customization-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -580,6 +635,11 @@
                         <li class="menu-item" data-section="galleria">
                             <i class="fas fa-images menu-icon"></i>
                             <span>Galleria</span>
+                        </li>
+                        <!-- NUOVA SEZIONE TEMI -->
+                        <li class="menu-item" data-section="temi">
+                            <i class="fas fa-palette menu-icon"></i>
+                            <span>Temi</span>
                         </li>
                         <li class="menu-item" data-section="contatti">
                             <i class="fas fa-phone menu-icon"></i>
@@ -897,6 +957,181 @@
         </button>
     </div>
 </div>
+
+                    <!-- NUOVA SEZIONE TEMI -->
+                    <div class="admin-section" id="temiSection" style="display: none;">
+                        <h2 class="section-title">Gestione Temi</h2>
+                        
+                        <!-- Selezione Tema Predefinito -->
+                        <div class="form-section" style="background-color: rgba(212, 175, 55, 0.1); padding: 25px; border-radius: 10px; margin-bottom: 30px; border-left: 4px solid var(--color-gold);">
+                            <h3 style="color: var(--color-gold); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-star"></i>
+                                <span>Temi Predefiniti</span>
+                            </h3>
+                            
+                            <div class="themes-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 25px;">
+                                <!-- Tema 1 Anno -->
+                                <div class="theme-card" data-theme="1" style="background: white; border-radius: 12px; padding: 20px; box-shadow: var(--shadow); cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease; border: 2px solid transparent;">
+                                    <div class="theme-preview" style="height: 120px; background: linear-gradient(135deg, #e6f2ff 0%, #f9f3e3 100%); border-radius: 8px; margin-bottom: 15px; position: relative; overflow: hidden;">
+                                        <div style="position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,0.9); padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; font-weight: bold; color: #d4af37;">
+                                            1 ANNO
+                                        </div>
+                                        <div style="position: absolute; bottom: 10px; left: 10px; right: 10px; background: rgba(255,255,255,0.9); padding: 8px; border-radius: 6px; text-align: center;">
+                                            <div style="font-weight: bold; color: #333; font-size: 0.9rem;">Stile Elegante</div>
+                                        </div>
+                                    </div>
+                                    <h4 style="color: var(--color-text); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                                        <i class="fas fa-baby" style="color: #d4af37;"></i>
+                                        <span>Tema 1° Compleanno</span>
+                                    </h4>
+                                    <p style="color: var(--color-light-text); font-size: 0.9rem; margin-bottom: 15px;">
+                                        Tema elegante con colori pastello, perfetto per il primo compleanno.
+                                    </p>
+                                    <button class="btn btn-select-theme" onclick="selectTheme('1')" style="width: 100%;">
+                                        <i class="fas fa-check"></i> Seleziona Tema
+                                    </button>
+                                </div>
+                                
+                                <!-- Tema 18 Anni -->
+                                <div class="theme-card" data-theme="18" style="background: white; border-radius: 12px; padding: 20px; box-shadow: var(--shadow); cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease; border: 2px solid transparent;">
+                                    <div class="theme-preview" style="height: 120px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; margin-bottom: 15px; position: relative; overflow: hidden;">
+                                        <div style="position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,0.9); padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; font-weight: bold; color: #667eea;">
+                                            18 ANNI
+                                        </div>
+                                        <div style="position: absolute; bottom: 10px; left: 10px; right: 10px; background: rgba(255,255,255,0.9); padding: 8px; border-radius: 6px; text-align: center;">
+                                            <div style="font-weight: bold; color: #333; font-size: 0.9rem;">Stile Moderno</div>
+                                        </div>
+                                    </div>
+                                    <h4 style="color: var(--color-text); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                                        <i class="fas fa-user-graduate" style="color: #667eea;"></i>
+                                        <span>Tema 18° Compleanno</span>
+                                    </h4>
+                                    <p style="color: var(--color-light-text); font-size: 0.9rem; margin-bottom: 15px;">
+                                        Tema moderno e dinamico, ideale per il diciottesimo compleanno.
+                                    </p>
+                                    <button class="btn btn-select-theme" onclick="selectTheme('18')" style="width: 100%;">
+                                        <i class="fas fa-check"></i> Seleziona Tema
+                                    </button>
+                                </div>
+                                
+                                <!-- Tema 50 Anni -->
+                                <div class="theme-card" data-theme="50" style="background: white; border-radius: 12px; padding: 20px; box-shadow: var(--shadow); cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease; border: 2px solid transparent;">
+                                    <div class="theme-preview" style="height: 120px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 8px; margin-bottom: 15px; position: relative; overflow: hidden;">
+                                        <div style="position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,0.9); padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; font-weight: bold; color: #f5576c;">
+                                            50 ANNI
+                                        </div>
+                                        <div style="position: absolute; bottom: 10px; left: 10px; right: 10px; background: rgba(255,255,255,0.9); padding: 8px; border-radius: 6px; text-align: center;">
+                                            <div style="font-weight: bold; color: #333; font-size: 0.9rem;">Stile Raffinato</div>
+                                        </div>
+                                    </div>
+                                    <h4 style="color: var(--color-text); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                                        <i class="fas fa-crown" style="color: #f5576c;"></i>
+                                        <span>Tema 50° Compleanno</span>
+                                    </h4>
+                                    <p style="color: var(--color-light-text); font-size: 0.9rem; margin-bottom: 15px;">
+                                        Tema raffinato ed elegante, perfetto per un compleanno importante.
+                                    </p>
+                                    <button class="btn btn-select-theme" onclick="selectTheme('50')" style="width: 100%;">
+                                        <i class="fas fa-check"></i> Seleziona Tema
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="current-theme-info" style="background: rgba(212, 175, 55, 0.2); padding: 15px; border-radius: 8px; margin-top: 20px;">
+                                <h4 style="color: var(--color-gold); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>Tema Attualmente Attivo</span>
+                                </h4>
+                                <div id="currentThemeDisplay" style="font-weight: bold; color: var(--color-text);">
+                                    Caricamento...
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Personalizzazione Colori -->
+                        <div class="form-section" style="background-color: rgba(212, 175, 55, 0.05); padding: 25px; border-radius: 10px; margin-bottom: 30px; border-left: 4px solid var(--color-gold);">
+                            <h3 style="color: var(--color-gold); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-paint-brush"></i>
+                                <span>Personalizzazione Colori</span>
+                            </h3>
+                            
+                            <div class="color-customization-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                                <!-- Colore Primario -->
+                                <div class="color-input-group">
+                                    <label class="form-label" for="primaryColor">
+                                        <i class="fas fa-palette" style="color: var(--color-gold);"></i>
+                                        Colore Primario
+                                    </label>
+                                    <div style="display: flex; gap: 10px; align-items: center;">
+                                        <input type="color" id="primaryColor" class="form-input" style="width: 60px; height: 40px; padding: 0; border: none;">
+                                        <input type="text" id="primaryColorText" class="form-input" placeholder="#d4af37" style="flex: 1;">
+                                    </div>
+                                </div>
+                                
+                                <!-- Colore Secondario -->
+                                <div class="color-input-group">
+                                    <label class="form-label" for="secondaryColor">
+                                        <i class="fas fa-palette" style="color: #667eea;"></i>
+                                        Colore Secondario
+                                    </label>
+                                    <div style="display: flex; gap: 10px; align-items: center;">
+                                        <input type="color" id="secondaryColor" class="form-input" style="width: 60px; height: 40px; padding: 0; border: none;">
+                                        <input type="text" id="secondaryColorText" class="form-input" placeholder="#667eea" style="flex: 1;">
+                                    </div>
+                                </div>
+                                
+                                <!-- Colore Sfondo -->
+                                <div class="color-input-group">
+                                    <label class="form-label" for="backgroundColor">
+                                        <i class="fas fa-fill" style="color: #f9f3e3;"></i>
+                                        Colore Sfondo
+                                    </label>
+                                    <div style="display: flex; gap: 10px; align-items: center;">
+                                        <input type="color" id="backgroundColor" class="form-input" style="width: 60px; height: 40px; padding: 0; border: none;">
+                                        <input type="text" id="backgroundColorText" class="form-input" placeholder="#f9f3e3" style="flex: 1;">
+                                    </div>
+                                </div>
+                                
+                                <!-- Colore Testo -->
+                                <div class="color-input-group">
+                                    <label class="form-label" for="textColor">
+                                        <i class="fas fa-font" style="color: #333333;"></i>
+                                        Colore Testo
+                                    </label>
+                                    <div style="display: flex; gap: 10px; align-items: center;">
+                                        <input type="color" id="textColor" class="form-input" style="width: 60px; height: 40px; padding: 0; border: none;">
+                                        <input type="text" id="textColorText" class="form-input" placeholder="#333333" style="flex: 1;">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap;">
+                                <button class="btn" onclick="saveCustomColors()">
+                                    <i class="fas fa-save"></i> Salva Colori Personalizzati
+                                </button>
+                                <button class="btn" onclick="resetCustomColors()" style="background-color: var(--color-light-text);">
+                                    <i class="fas fa-undo"></i> Ripristina Colori Default
+                                </button>
+                            </div>
+                            
+                            <div class="success-message" id="colorsSuccess" style="display: none; margin-top: 15px;">
+                                Colori salvati con successo!
+                            </div>
+                        </div>
+                        
+                        <!-- Anteprima Live -->
+                        <div class="form-section">
+                            <h3 style="color: var(--color-gold); margin-bottom: 15px;">Anteprima Live</h3>
+                            <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: var(--shadow);">
+                                <p style="color: var(--color-light-text); margin-bottom: 15px;">
+                                    Le modifiche al tema verranno applicate immediatamente al sito. Puoi vedere l'anteprima aprendo il sito in una nuova scheda.
+                                </p>
+                                <button class="btn" onclick="openSitePreview()">
+                                    <i class="fas fa-external-link-alt"></i> Apri Anteprima Sito
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                     
                     <!-- Contatti Section -->
                     <div class="admin-section" id="contattiSection" style="display: none;">
@@ -1087,6 +1322,11 @@
                     loadGallery();
 					loadDefaultImages();
                 }
+                
+                // Se è la sezione Temi, carica la configurazione
+                if (this.getAttribute('data-section') === 'temi') {
+                    loadCurrentTheme();
+                }
             });
         });
         
@@ -1136,6 +1376,189 @@
                 godparentsName: localStorage.getItem('godparentsName')
             });
         }
+        
+        // ========== FUNZIONI PER GESTIONE TEMI ==========
+
+        // Carica il tema corrente
+        function loadCurrentTheme() {
+            const savedTheme = localStorage.getItem('selectedTheme') || '1';
+            updateThemeDisplay(savedTheme);
+            highlightSelectedTheme(savedTheme);
+            loadCustomColors();
+            setupColorSync();
+        }
+
+        // Seleziona un tema
+        function selectTheme(themeNumber) {
+            // Salva il tema selezionato
+            localStorage.setItem('selectedTheme', themeNumber);
+            
+            // Aggiorna la visualizzazione
+            updateThemeDisplay(themeNumber);
+            highlightSelectedTheme(themeNumber);
+            
+            // Mostra messaggio di successo
+            showTempMessage(`Tema ${themeNumber}° compleanno attivato con successo!`, 'success');
+            
+            // Applica il tema al sito (se necessario)
+            applyThemeToSite(themeNumber);
+        }
+
+        // Aggiorna la visualizzazione del tema corrente
+        function updateThemeDisplay(themeNumber) {
+            const themeNames = {
+                '1': '1° Compleanno - Stile Elegante',
+                '18': '18° Compleanno - Stile Moderno', 
+                '50': '50° Compleanno - Stile Raffinato',
+                'custom': 'Tema Personalizzato'
+            };
+            
+            document.getElementById('currentThemeDisplay').textContent = themeNames[themeNumber] || 'Tema personalizzato';
+        }
+
+        // Evidenzia il tema selezionato
+        function highlightSelectedTheme(themeNumber) {
+            // Rimuovi highlight da tutti i temi
+            document.querySelectorAll('.theme-card').forEach(card => {
+                card.style.borderColor = 'transparent';
+                card.style.transform = 'scale(1)';
+            });
+            
+            // Aggiungi highlight al tema selezionato
+            const selectedCard = document.querySelector(`.theme-card[data-theme="${themeNumber}"]`);
+            if (selectedCard) {
+                selectedCard.style.borderColor = 'var(--color-gold)';
+                selectedCard.style.transform = 'scale(1.02)';
+            }
+        }
+
+        // Carica i colori personalizzati
+        function loadCustomColors() {
+            const customColors = JSON.parse(localStorage.getItem('customColors')) || {};
+            
+            if (customColors.primary) {
+                document.getElementById('primaryColor').value = customColors.primary;
+                document.getElementById('primaryColorText').value = customColors.primary;
+            }
+            
+            if (customColors.secondary) {
+                document.getElementById('secondaryColor').value = customColors.secondary;
+                document.getElementById('secondaryColorText').value = customColors.secondary;
+            }
+            
+            if (customColors.background) {
+                document.getElementById('backgroundColor').value = customColors.background;
+                document.getElementById('backgroundColorText').value = customColors.background;
+            }
+            
+            if (customColors.text) {
+                document.getElementById('textColor').value = customColors.text;
+                document.getElementById('textColorText').value = customColors.text;
+            }
+        }
+
+        // Salva i colori personalizzati
+        function saveCustomColors() {
+            const customColors = {
+                primary: document.getElementById('primaryColor').value,
+                secondary: document.getElementById('secondaryColor').value,
+                background: document.getElementById('backgroundColor').value,
+                text: document.getElementById('textColor').value
+            };
+            
+            // Validazione colori
+            if (!isValidColor(customColors.primary) || !isValidColor(customColors.secondary) || 
+                !isValidColor(customColors.background) || !isValidColor(customColors.text)) {
+                alert('Inserisci colori validi nel formato esadecimale (#RRGGBB)');
+                return;
+            }
+            
+            localStorage.setItem('customColors', JSON.stringify(customColors));
+            localStorage.setItem('selectedTheme', 'custom');
+            
+            // Aggiorna la visualizzazione
+            updateThemeDisplay('custom');
+            highlightSelectedTheme('custom');
+            
+            // Mostra messaggio di successo
+            document.getElementById('colorsSuccess').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('colorsSuccess').style.display = 'none';
+            }, 3000);
+            
+            // Applica i colori al sito
+            applyCustomColorsToSite(customColors);
+        }
+
+        // Ripristina i colori default
+        function resetCustomColors() {
+            if (confirm('Sei sicuro di voler ripristinare i colori predefiniti?')) {
+                localStorage.removeItem('customColors');
+                
+                // Ripristina i valori dei campi
+                document.getElementById('primaryColor').value = '#d4af37';
+                document.getElementById('primaryColorText').value = '#d4af37';
+                document.getElementById('secondaryColor').value = '#667eea';
+                document.getElementById('secondaryColorText').value = '#667eea';
+                document.getElementById('backgroundColor').value = '#f9f3e3';
+                document.getElementById('backgroundColorText').value = '#f9f3e3';
+                document.getElementById('textColor').value = '#333333';
+                document.getElementById('textColorText').value = '#333333';
+                
+                // Mostra messaggio di successo
+                showTempMessage('Colori ripristinati con successo!', 'success');
+            }
+        }
+
+        // Validazione colore
+        function isValidColor(color) {
+            return /^#[0-9A-F]{6}$/i.test(color);
+        }
+
+        // Applica il tema al sito (simulazione)
+        function applyThemeToSite(themeNumber) {
+            console.log(`Applicazione tema ${themeNumber} al sito...`);
+            // In un'implementazione reale, qui aggiorneresti le variabili CSS
+            // o ricaricheresti la pagina con il nuovo tema
+        }
+
+        // Applica i colori personalizzati al sito
+        function applyCustomColorsToSite(colors) {
+            console.log('Applicazione colori personalizzati al sito:', colors);
+            // In un'implementazione reale, qui aggiorneresti le variabili CSS dinamiche
+        }
+
+        // Apri anteprima del sito
+        function openSitePreview() {
+            window.open('index.html', '_blank');
+        }
+
+        // Sincronizza i campi colore
+        function setupColorSync() {
+            // Sincronizza input colore con testo
+            const colorInputs = ['primaryColor', 'secondaryColor', 'backgroundColor', 'textColor'];
+            
+            colorInputs.forEach(inputId => {
+                const colorInput = document.getElementById(inputId);
+                const textInput = document.getElementById(inputId + 'Text');
+                
+                if (colorInput && textInput) {
+                    // Da input colore a testo
+                    colorInput.addEventListener('input', function() {
+                        textInput.value = this.value;
+                    });
+                    
+                    // Da testo a input colore
+                    textInput.addEventListener('input', function() {
+                        if (isValidColor(this.value)) {
+                            colorInput.value = this.value;
+                        }
+                    });
+                }
+            });
+        }
+
+        // ========== FINE FUNZIONI TEMI ==========
         
         // ========== FUNZIONI PER GESTIONE EMAIL RSVP ==========
         
@@ -1328,6 +1751,10 @@
             
             // Footer
             document.getElementById('footerText').value = localStorage.getItem('footerText') || '';
+            
+            // Carica configurazione temi
+            loadCurrentTheme();
+            setupColorSync();
         }
         
         // Aggiorna la visualizzazione della data corrente
