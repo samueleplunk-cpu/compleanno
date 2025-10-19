@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pannello Admin - Battesimo</title>
+    <title>Pannello Admin - Compleanno</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
@@ -659,15 +659,15 @@
                         <h2 class="section-title">Home</h2>
                         
                         <div class="form-section">
-                            <label class="form-label" for="babyName">Nome del bambino</label>
-                            <input type="text" id="babyName" class="form-input" placeholder="Emma Rossi">
+                            <label class="form-label" for="personName">Nome del festeggiato</label>
+                            <input type="text" id="personName" class="form-input" placeholder="Marco Rossi">
                             <button class="btn" onclick="saveHomeData()" style="margin-top: 10px;">Salva modifiche</button>
                             <div class="success-message" id="homeSuccess">Modifiche salvate con successo!</div>
                         </div>
                         
                         <div class="form-section">
-                            <label class="form-label" for="babyDetails">Dettagli del bambino</label>
-                            <input type="text" id="babyDetails" class="form-input" placeholder="Nata il 15 Marzo 2023">
+                            <label class="form-label" for="personDetails">Dettagli del compleanno</label>
+                            <input type="text" id="personDetails" class="form-input" placeholder="Compie 18 anni il 15 Marzo 2024">
                             <button class="btn" onclick="saveHomeData()" style="margin-top: 10px;">Salva modifiche</button>
                             <div class="success-message" id="homeSuccess2">Modifiche salvate con successo!</div>
                         </div>
@@ -679,21 +679,21 @@
                         
                         <div class="form-section">
                             <label class="form-label" for="invitoText1">Testo 1</label>
-                            <textarea id="invitoText1" class="form-textarea" placeholder="Mamma e papà mi hanno preparato una festa indimenticabile e sarebbe un piacere immenso poter essere insieme in questo giorno."></textarea>
+                            <textarea id="invitoText1" class="form-textarea" placeholder="Sto organizzando una festa indimenticabile e sarebbe un piacere immenso poter essere insieme in questo giorno speciale."></textarea>
                             <button class="btn" onclick="saveInvitoData()" style="margin-top: 10px;">Salva modifiche</button>
                             <div class="success-message" id="invitoSuccess1">Modifiche salvate con successo!</div>
                         </div>
                         
                         <div class="form-section">
                             <label class="form-label" for="invitoText2">Testo 2</label>
-                            <textarea id="invitoText2" class="form-textarea" placeholder="Abbiamo sentito dire che verranno fate, draghi, principi e principesse, folletti e unicorni. O forse è solo frutto della mia immaginazione :)"></textarea>
+                            <textarea id="invitoText2" class="form-textarea" placeholder="Abbiamo sentito dire che verranno amici, musica, divertimento e tante sorprese. O forse è solo frutto della mia immaginazione :)"></textarea>
                             <button class="btn" onclick="saveInvitoData()" style="margin-top: 10px;">Salva modifiche</button>
                             <div class="success-message" id="invitoSuccess2">Modifiche salvate con successo!</div>
                         </div>
                         
                         <div class="form-section">
                             <label class="form-label" for="invitoText3">Testo 3</label>
-                            <textarea id="invitoText3" class="form-textarea" placeholder="In ogni caso, questa è la mia prima festa e ti aspetto con affetto!"></textarea>
+                            <textarea id="invitoText3" class="form-textarea" placeholder="In ogni caso, questa è una festa importante per me e ti aspetto con affetto!"></textarea>
                             <button class="btn" onclick="saveInvitoData()" style="margin-top: 10px;">Salva modifiche</button>
                             <div class="success-message" id="invitoSuccess3">Modifiche salvate con successo!</div>
                         </div>
@@ -723,29 +723,29 @@
                         </div>
                         
                         <div class="form-section">
-                            <label class="form-label" for="patriziaName">Nome nella sezione rettangolo</label>
-                            <input type="text" id="patriziaName" class="form-input" placeholder="Patrizia ♡">
+                            <label class="form-label" for="hostName">Nome dell'organizzatore</label>
+                            <input type="text" id="hostName" class="form-input" placeholder="Marco ♡">
                             <button class="btn" onclick="saveFamigliaData()" style="margin-top: 10px;">Salva modifiche</button>
                             <div class="success-message" id="famigliaSuccess1">Modifiche salvate con successo!</div>
                         </div>
                         
                         <div class="form-section">
-                            <label class="form-label" for="patriziaMessage">Messaggio nel rettangolo</label>
-                            <textarea id="patriziaMessage" class="form-textarea" placeholder="Se sei arrivato qui, significa che teniamo molto a te e saremmo felici se fossi con noi in un giorno così speciale!"></textarea>
+                            <label class="form-label" for="hostMessage">Messaggio nel rettangolo</label>
+                            <textarea id="hostMessage" class="form-textarea" placeholder="Se sei arrivato qui, significa che teniamo molto a te e saremmo felici se fossi con noi in un giorno così speciale!"></textarea>
                             <button class="btn" onclick="saveFamigliaData()" style="margin-top: 10px;">Salva modifiche</button>
                             <div class="success-message" id="famigliaSuccess2">Modifiche salvate con successo!</div>
                         </div>
                         
                         <div class="form-section">
-                            <label class="form-label" for="parentsName">Nomi genitori</label>
-                            <input type="text" id="parentsName" class="form-input" placeholder="Marco e Laura Rossi">
+                            <label class="form-label" for="familyNames">Nomi familiari</label>
+                            <input type="text" id="familyNames" class="form-input" placeholder="Mamma Laura e Papà Giovanni">
                             <button class="btn" onclick="saveFamigliaData()" style="margin-top: 10px;">Salva modifiche</button>
                             <div class="success-message" id="famigliaSuccess3">Modifiche salvate con successo!</div>
                         </div>
                         
                         <div class="form-section">
-                            <label class="form-label" for="godparentsName">Nomi padrini</label>
-                            <input type="text" id="godparentsName" class="form-input" placeholder="Alessandro e Giulia Bianchi">
+                            <label class="form-label" for="specialGuests">Ospiti speciali</label>
+                            <input type="text" id="specialGuests" class="form-input" placeholder="Alessandro e Giulia Bianchi">
                             <button class="btn" onclick="saveFamigliaData()" style="margin-top: 10px;">Salva modifiche</button>
                             <div class="success-message" id="famigliaSuccess4">Modifiche salvate con successo!</div>
                         </div>
@@ -756,29 +756,29 @@
                         <h2 class="section-title">Luoghi</h2>
                         
                         <div class="form-section">
-                            <label class="form-label" for="churchName">Nome della chiesa</label>
-                            <input type="text" id="churchName" class="form-input" placeholder="Chiesa di Santa Maria">
+                            <label class="form-label" for="partyLocation">Nome della location</label>
+                            <input type="text" id="partyLocation" class="form-input" placeholder="Villa dei Fiori">
                             <button class="btn" onclick="saveLuoghiData()" style="margin-top: 10px;">Salva modifiche</button>
                             <div class="success-message" id="luoghiSuccess1">Modifiche salvate con successo!</div>
                         </div>
                         
                         <div class="form-section">
-                            <label class="form-label" for="churchAddress">Indirizzo della chiesa</label>
-                            <input type="text" id="churchAddress" class="form-input" placeholder="Piazza del Duomo, 1 - Milano">
+                            <label class="form-label" for="partyAddress">Indirizzo della festa</label>
+                            <input type="text" id="partyAddress" class="form-input" placeholder="Piazza del Duomo, 1 - Milano">
                             <button class="btn" onclick="saveLuoghiData()" style="margin-top: 10px;">Salva modifiche</button>
                             <div class="success-message" id="luoghiSuccess2">Modifiche salvate con successo!</div>
                         </div>
                         
                         <div class="form-section">
-                            <label class="form-label" for="receptionLocation">Nome del ristorante/ricevimento</label>
-                            <input type="text" id="receptionLocation" class="form-input" placeholder="Ristorante La Collina">
+                            <label class="form-label" for="venueName">Nome del ristorante/ricevimento</label>
+                            <input type="text" id="venueName" class="form-input" placeholder="Ristorante La Collina">
                             <button class="btn" onclick="saveLuoghiData()" style="margin-top: 10px;">Salva modifiche</button>
                             <div class="success-message" id="luoghiSuccess3">Modifiche salvate con successo!</div>
                         </div>
                         
                         <div class="form-section">
-                            <label class="form-label" for="receptionAddress">Indirizzo del ristorante</label>
-                            <input type="text" id="receptionAddress" class="form-input" placeholder="Via Roma, 15 - Milano">
+                            <label class="form-label" for="venueAddress">Indirizzo del ristorante</label>
+                            <input type="text" id="venueAddress" class="form-input" placeholder="Via Roma, 15 - Milano">
                             <button class="btn" onclick="saveLuoghiData()" style="margin-top: 10px;">Salva modifiche</button>
                             <div class="success-message" id="luoghiSuccess4">Modifiche salvate con successo!</div>
                         </div>
@@ -1368,12 +1368,12 @@
         function debugSave(section) {
             console.log(`Salvataggio sezione: ${section}`);
             console.log('Contenuto localStorage:', {
-                babyName: localStorage.getItem('babyName'),
-                babyDetails: localStorage.getItem('babyDetails'),
+                personName: localStorage.getItem('personName'),
+                personDetails: localStorage.getItem('personDetails'),
                 profileImage: localStorage.getItem('profileImage') ? 'PRESENTE' : 'ASSENTE',
-                patriziaName: localStorage.getItem('patriziaName'),
-                parentsName: localStorage.getItem('parentsName'),
-                godparentsName: localStorage.getItem('godparentsName')
+                hostName: localStorage.getItem('hostName'),
+                familyNames: localStorage.getItem('familyNames'),
+                specialGuests: localStorage.getItem('specialGuests')
             });
         }
         
@@ -1694,8 +1694,8 @@
         // Carica dati dal localStorage
         function loadAdminData() {
             // Home
-            document.getElementById('babyName').value = localStorage.getItem('babyName') || '';
-            document.getElementById('babyDetails').value = localStorage.getItem('babyDetails') || '';
+            document.getElementById('personName').value = localStorage.getItem('personName') || '';
+            document.getElementById('personDetails').value = localStorage.getItem('personDetails') || '';
             
             // Invito
             document.getElementById('invitoText1').value = localStorage.getItem('invitoText1') || '';
@@ -1710,10 +1710,10 @@
             }
             
             // Famiglia
-            document.getElementById('patriziaName').value = localStorage.getItem('patriziaName') || '';
-            document.getElementById('patriziaMessage').value = localStorage.getItem('patriziaMessage') || '';
-            document.getElementById('parentsName').value = localStorage.getItem('parentsName') || '';
-            document.getElementById('godparentsName').value = localStorage.getItem('godparentsName') || '';
+            document.getElementById('hostName').value = localStorage.getItem('hostName') || '';
+            document.getElementById('hostMessage').value = localStorage.getItem('hostMessage') || '';
+            document.getElementById('familyNames').value = localStorage.getItem('familyNames') || '';
+            document.getElementById('specialGuests').value = localStorage.getItem('specialGuests') || '';
             
             // Carica anteprima immagine profilo se presente
             const savedProfileImage = localStorage.getItem('profileImage');
@@ -1723,14 +1723,14 @@
             }
             
             // Luoghi
-            document.getElementById('churchName').value = localStorage.getItem('churchName') || '';
-            document.getElementById('churchAddress').value = localStorage.getItem('churchAddress') || '';
-            document.getElementById('receptionLocation').value = localStorage.getItem('receptionLocation') || '';
-            document.getElementById('receptionAddress').value = localStorage.getItem('receptionAddress') || '';
+            document.getElementById('partyLocation').value = localStorage.getItem('partyLocation') || '';
+            document.getElementById('partyAddress').value = localStorage.getItem('partyAddress') || '';
+            document.getElementById('venueName').value = localStorage.getItem('venueName') || '';
+            document.getElementById('venueAddress').value = localStorage.getItem('venueAddress') || '';
             
             // Countdown - Carica data e ora salvate
-            const savedDate = localStorage.getItem('baptismEventDate');
-            const savedTime = localStorage.getItem('baptismEventTime');
+            const savedDate = localStorage.getItem('birthdayEventDate');
+            const savedTime = localStorage.getItem('birthdayEventTime');
             
             if (savedDate) {
                 document.getElementById('eventDate').value = savedDate;
@@ -1759,8 +1759,8 @@
         
         // Aggiorna la visualizzazione della data corrente
         function updateCurrentDateDisplay() {
-            const savedDate = localStorage.getItem('baptismEventDate');
-            const savedTime = localStorage.getItem('baptismEventTime');
+            const savedDate = localStorage.getItem('birthdayEventDate');
+            const savedTime = localStorage.getItem('birthdayEventTime');
             
             if (savedDate && savedTime) {
                 const eventDate = new Date(`${savedDate}T${savedTime}`);
@@ -1775,7 +1775,7 @@
                 const formattedDate = eventDate.toLocaleDateString('it-IT', options);
                 document.getElementById('currentDateDisplay').textContent = formattedDate;
             } else {
-                document.getElementById('currentDateDisplay').textContent = 'Nessuna data impostata (verrà utilizzata la data predefinita: 10 Giugno 2023, 11:00)';
+                document.getElementById('currentDateDisplay').textContent = 'Nessuna data impostata (verrà utilizzata la data predefinita: 10 Giugno 2024, 11:00)';
             }
         }
         
@@ -2059,7 +2059,7 @@ function loadRSVPList() {
     checkCurrentEmail();
     
     const rsvpListContainer = document.getElementById('rsvpListContainer');
-    const rsvps = JSON.parse(localStorage.getItem('baptismRSVPs')) || [];
+    const rsvps = JSON.parse(localStorage.getItem('birthdayRSVPs')) || [];
     
     if (rsvps.length === 0) {
         rsvpListContainer.innerHTML = '<div class="no-rsvp">Nessuna conferma di partecipazione ricevuta.</div>';
@@ -2122,9 +2122,9 @@ function loadRSVPList() {
         // Elimina una singola conferma RSVP
         function deleteRSVP(index) {
             if (confirm('Sei sicuro di voler eliminare questa conferma di partecipazione?')) {
-                const rsvps = JSON.parse(localStorage.getItem('baptismRSVPs')) || [];
+                const rsvps = JSON.parse(localStorage.getItem('birthdayRSVPs')) || [];
                 rsvps.splice(index, 1);
-                localStorage.setItem('baptismRSVPs', JSON.stringify(rsvps));
+                localStorage.setItem('birthdayRSVPs', JSON.stringify(rsvps));
                 loadRSVPList();
                 
                 // Mostra messaggio di successo
@@ -2135,7 +2135,7 @@ function loadRSVPList() {
         // Reset di tutte le conferme RSVP
         function resetAllRSVPs() {
             if (confirm('Sei sicuro di voler eliminare TUTTE le conferme di partecipazione? Questa operazione non può essere annullata.')) {
-                localStorage.setItem('baptismRSVPs', JSON.stringify([]));
+                localStorage.setItem('birthdayRSVPs', JSON.stringify([]));
                 loadRSVPList();
                 
                 // Mostra messaggio di successo
@@ -2395,10 +2395,10 @@ function confirmDelete() {
         
         // Salva dati Luoghi
         function saveLuoghiData() {
-            localStorage.setItem('churchName', document.getElementById('churchName').value);
-            localStorage.setItem('churchAddress', document.getElementById('churchAddress').value);
-            localStorage.setItem('receptionLocation', document.getElementById('receptionLocation').value);
-            localStorage.setItem('receptionAddress', document.getElementById('receptionAddress').value);
+            localStorage.setItem('partyLocation', document.getElementById('partyLocation').value);
+            localStorage.setItem('partyAddress', document.getElementById('partyAddress').value);
+            localStorage.setItem('venueName', document.getElementById('venueName').value);
+            localStorage.setItem('venueAddress', document.getElementById('venueAddress').value);
             
             // Mostra messaggio di successo
             document.getElementById('luoghiSuccess1').style.display = 'block';
@@ -2435,8 +2435,8 @@ function confirmDelete() {
             document.getElementById('dateError').style.display = 'none';
             
             // Salva nel localStorage
-            localStorage.setItem('baptismEventDate', eventDate);
-            localStorage.setItem('baptismEventTime', eventTime);
+            localStorage.setItem('birthdayEventDate', eventDate);
+            localStorage.setItem('birthdayEventTime', eventTime);
             
             // Aggiorna la visualizzazione
             updateCurrentDateDisplay();
@@ -2453,8 +2453,8 @@ function confirmDelete() {
         
         // Salva dati Home
         function saveHomeData() {
-            localStorage.setItem('babyName', document.getElementById('babyName').value);
-            localStorage.setItem('babyDetails', document.getElementById('babyDetails').value);
+            localStorage.setItem('personName', document.getElementById('personName').value);
+            localStorage.setItem('personDetails', document.getElementById('personDetails').value);
             
             // Mostra messaggio di successo
             document.getElementById('homeSuccess').style.display = 'block';
@@ -2538,10 +2538,10 @@ function confirmDelete() {
         
         // Salva dati Famiglia
         function saveFamigliaData() {
-            localStorage.setItem('patriziaName', document.getElementById('patriziaName').value);
-            localStorage.setItem('patriziaMessage', document.getElementById('patriziaMessage').value);
-            localStorage.setItem('parentsName', document.getElementById('parentsName').value);
-            localStorage.setItem('godparentsName', document.getElementById('godparentsName').value);
+            localStorage.setItem('hostName', document.getElementById('hostName').value);
+            localStorage.setItem('hostMessage', document.getElementById('hostMessage').value);
+            localStorage.setItem('familyNames', document.getElementById('familyNames').value);
+            localStorage.setItem('specialGuests', document.getElementById('specialGuests').value);
             
             // Mostra messaggio di successo
             document.getElementById('famigliaSuccess1').style.display = 'block';
