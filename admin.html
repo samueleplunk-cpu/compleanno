@@ -1368,12 +1368,12 @@
         function debugSave(section) {
             console.log(`Salvataggio sezione: ${section}`);
             console.log('Contenuto localStorage:', {
-                personName: localStorage.getItem('personName'),
-                personDetails: localStorage.getItem('personDetails'),
+                birthdayPersonName: localStorage.getItem('birthdayPersonName'),
+                birthdayDetails: localStorage.getItem('birthdayDetails'),
                 profileImage: localStorage.getItem('profileImage') ? 'PRESENTE' : 'ASSENTE',
-                hostName: localStorage.getItem('hostName'),
-                familyNames: localStorage.getItem('familyNames'),
-                specialGuests: localStorage.getItem('specialGuests')
+                birthdayPersonMessage: localStorage.getItem('birthdayPersonMessage'),
+                parentsName: localStorage.getItem('parentsName'),
+                specialGuestsName: localStorage.getItem('specialGuestsName')
             });
         }
         
@@ -1691,11 +1691,13 @@
         
         // ========== FINE FUNZIONI EMAIL RSVP ==========
         
-        // Carica dati dal localStorage
+        // Carica dati dal localStorage - MODIFICATO PER ALLINEARE CON INDEX.HTML
         function loadAdminData() {
-            // Home
-            document.getElementById('personName').value = localStorage.getItem('personName') || '';
-            document.getElementById('personDetails').value = localStorage.getItem('personDetails') || '';
+            console.log("Caricamento dati admin...");
+            
+            // Home - CARICA CON NUOVE CHIAVI ALLINEATE
+            document.getElementById('personName').value = localStorage.getItem('birthdayPersonName') || '';
+            document.getElementById('personDetails').value = localStorage.getItem('birthdayDetails') || '';
             
             // Invito
             document.getElementById('invitoText1').value = localStorage.getItem('invitoText1') || '';
@@ -1709,11 +1711,11 @@
                 invitoImagePreview.style.display = 'block';
             }
             
-            // Famiglia
-            document.getElementById('hostName').value = localStorage.getItem('hostName') || '';
-            document.getElementById('hostMessage').value = localStorage.getItem('hostMessage') || '';
-            document.getElementById('familyNames').value = localStorage.getItem('familyNames') || '';
-            document.getElementById('specialGuests').value = localStorage.getItem('specialGuests') || '';
+            // Famiglia - CARICA CON NUOVE CHIAVI ALLINEATE
+            document.getElementById('hostName').value = localStorage.getItem('birthdayPersonName') || '';
+            document.getElementById('hostMessage').value = localStorage.getItem('birthdayPersonMessage') || '';
+            document.getElementById('familyNames').value = localStorage.getItem('parentsName') || '';
+            document.getElementById('specialGuests').value = localStorage.getItem('specialGuestsName') || '';
             
             // Carica anteprima immagine profilo se presente
             const savedProfileImage = localStorage.getItem('profileImage');
@@ -2393,68 +2395,12 @@ function confirmDelete() {
     });
 }
         
-        // Salva dati Luoghi
-        function saveLuoghiData() {
-            localStorage.setItem('partyLocation', document.getElementById('partyLocation').value);
-            localStorage.setItem('partyAddress', document.getElementById('partyAddress').value);
-            localStorage.setItem('venueName', document.getElementById('venueName').value);
-            localStorage.setItem('venueAddress', document.getElementById('venueAddress').value);
-            
-            // Mostra messaggio di successo
-            document.getElementById('luoghiSuccess1').style.display = 'block';
-            document.getElementById('luoghiSuccess2').style.display = 'block';
-            document.getElementById('luoghiSuccess3').style.display = 'block';
-            document.getElementById('luoghiSuccess4').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('luoghiSuccess1').style.display = 'none';
-                document.getElementById('luoghiSuccess2').style.display = 'none';
-                document.getElementById('luoghiSuccess3').style.display = 'none';
-                document.getElementById('luoghiSuccess4').style.display = 'none';
-            }, 3000);
-            
-            // Debug
-            debugSave('luoghi');
-        }
+        // ========== FUNZIONI DI SALVATAGGIO MODIFICATE PER ALLINEARE CON INDEX.HTML ==========
         
-        // Salva dati Countdown
-        function saveCountdownData() {
-            const eventDate = document.getElementById('eventDate').value;
-            const eventTime = document.getElementById('eventTime').value;
-            
-            // Validazione: controlla che la data non sia nel passato
-            const selectedDateTime = new Date(`${eventDate}T${eventTime}`);
-            const now = new Date();
-            
-            if (selectedDateTime <= now) {
-                document.getElementById('dateError').textContent = 'La data e l\'ora devono essere nel futuro!';
-                document.getElementById('dateError').style.display = 'block';
-                return;
-            }
-            
-            // Nascondi eventuali errori precedenti
-            document.getElementById('dateError').style.display = 'none';
-            
-            // Salva nel localStorage
-            localStorage.setItem('birthdayEventDate', eventDate);
-            localStorage.setItem('birthdayEventTime', eventTime);
-            
-            // Aggiorna la visualizzazione
-            updateCurrentDateDisplay();
-            
-            // Mostra messaggio di successo
-            document.getElementById('countdownSuccess').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('countdownSuccess').style.display = 'none';
-            }, 3000);
-            
-            // Debug
-            debugSave('countdown');
-        }
-        
-        // Salva dati Home
+        // Salva dati Home - MODIFICATO
         function saveHomeData() {
-            localStorage.setItem('personName', document.getElementById('personName').value);
-            localStorage.setItem('personDetails', document.getElementById('personDetails').value);
+            localStorage.setItem('birthdayPersonName', document.getElementById('personName').value);
+            localStorage.setItem('birthdayDetails', document.getElementById('personDetails').value);
             
             // Mostra messaggio di successo
             document.getElementById('homeSuccess').style.display = 'block';
@@ -2511,7 +2457,7 @@ function confirmDelete() {
             }
         }
         
-        // NUOVA FUNZIONE: Salva immagine Profilo
+        // Salva immagine Profilo
         function saveProfileImage() {
             const file = profileImageInput.files[0];
             if (file) {
@@ -2536,12 +2482,12 @@ function confirmDelete() {
             }
         }
         
-        // Salva dati Famiglia
+        // Salva dati Famiglia - MODIFICATO
         function saveFamigliaData() {
-            localStorage.setItem('hostName', document.getElementById('hostName').value);
-            localStorage.setItem('hostMessage', document.getElementById('hostMessage').value);
-            localStorage.setItem('familyNames', document.getElementById('familyNames').value);
-            localStorage.setItem('specialGuests', document.getElementById('specialGuests').value);
+            localStorage.setItem('birthdayPersonName', document.getElementById('hostName').value);
+            localStorage.setItem('birthdayPersonMessage', document.getElementById('hostMessage').value);
+            localStorage.setItem('parentsName', document.getElementById('familyNames').value);
+            localStorage.setItem('specialGuestsName', document.getElementById('specialGuests').value);
             
             // Mostra messaggio di successo
             document.getElementById('famigliaSuccess1').style.display = 'block';
@@ -2557,6 +2503,64 @@ function confirmDelete() {
             
             // Debug
             debugSave('famiglia');
+        }
+        
+        // Salva dati Luoghi
+        function saveLuoghiData() {
+            localStorage.setItem('partyLocation', document.getElementById('partyLocation').value);
+            localStorage.setItem('partyAddress', document.getElementById('partyAddress').value);
+            localStorage.setItem('venueName', document.getElementById('venueName').value);
+            localStorage.setItem('venueAddress', document.getElementById('venueAddress').value);
+            
+            // Mostra messaggio di successo
+            document.getElementById('luoghiSuccess1').style.display = 'block';
+            document.getElementById('luoghiSuccess2').style.display = 'block';
+            document.getElementById('luoghiSuccess3').style.display = 'block';
+            document.getElementById('luoghiSuccess4').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('luoghiSuccess1').style.display = 'none';
+                document.getElementById('luoghiSuccess2').style.display = 'none';
+                document.getElementById('luoghiSuccess3').style.display = 'none';
+                document.getElementById('luoghiSuccess4').style.display = 'none';
+            }, 3000);
+            
+            // Debug
+            debugSave('luoghi');
+        }
+        
+        // Salva dati Countdown
+        function saveCountdownData() {
+            const eventDate = document.getElementById('eventDate').value;
+            const eventTime = document.getElementById('eventTime').value;
+            
+            // Validazione: controlla che la data non sia nel passato
+            const selectedDateTime = new Date(`${eventDate}T${eventTime}`);
+            const now = new Date();
+            
+            if (selectedDateTime <= now) {
+                document.getElementById('dateError').textContent = 'La data e l\'ora devono essere nel futuro!';
+                document.getElementById('dateError').style.display = 'block';
+                return;
+            }
+            
+            // Nascondi eventuali errori precedenti
+            document.getElementById('dateError').style.display = 'none';
+            
+            // Salva nel localStorage
+            localStorage.setItem('birthdayEventDate', eventDate);
+            localStorage.setItem('birthdayEventTime', eventTime);
+            
+            // Aggiorna la visualizzazione
+            updateCurrentDateDisplay();
+            
+            // Mostra messaggio di successo
+            document.getElementById('countdownSuccess').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('countdownSuccess').style.display = 'none';
+            }, 3000);
+            
+            // Debug
+            debugSave('countdown');
         }
         
         // Salva dati Contatti
