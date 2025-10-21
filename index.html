@@ -7,6 +7,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
+        /* ========== PREVENT FLASH OF DEFAULT CONTENT ========== */
+        body:not(.loaded) {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        body.loaded {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.3s ease;
+        }
+
         /* ========== VARIABILI TEMI ========== */
         :root {
             /* Tema 1° Compleanno - Baby */
@@ -1316,6 +1328,253 @@
     </footer>
 
     <script>
+        // ========== DATI DI DEFAULT PER PRIMO ACCESSO ==========
+
+        function initializeDefaultData() {
+            // Controlla se è il primo accesso (localStorage vuoto)
+            const hasData = localStorage.getItem('birthdayPersonName') || 
+                            localStorage.getItem('birthdayEventDate') ||
+                            localStorage.getItem('invitoText1');
+            
+            if (!hasData) {
+                console.log("=== INIZIALIZZAZIONE DATI DEFAULT ===");
+                
+                // DATI HOME
+                localStorage.setItem('birthdayPersonName', 'Emma Rossi');
+                localStorage.setItem('birthdayDetails', 'Compie 1 anno!');
+                
+                // DATI INVITO
+                localStorage.setItem('invitoText1', 'Mamma e papà mi hanno preparato una festa indimenticabile e sarebbe un piacere immenso poter essere insieme in questo giorno speciale.');
+                localStorage.setItem('invitoText2', 'Ci saranno giochi, dolci e tante sorprese per tutti i bambini e i grandi che vorranno festeggiare con me questo traguardo importante!');
+                localStorage.setItem('invitoText3', 'Non vedo l\'ora di condividere con te questo giorno speciale!');
+                
+                // DATI FESTEGGIATI
+                localStorage.setItem('birthdayPersonMessage', 'Se sei arrivato qui, significa che sei speciale per me e sarei felice se fossi con noi in un giorno così importante!');
+                localStorage.setItem('parentsName', 'Marco e Laura Rossi');
+                localStorage.setItem('specialGuestsName', 'Alessandro e Giulia Bianchi');
+                
+                // DATI LUOGHI
+                localStorage.setItem('partyLocation', 'Salone Eventi "Il Giardino Incantato"');
+                localStorage.setItem('partyAddress', 'Piazza della Festa, 1 - Milano');
+                localStorage.setItem('venueName', 'Ristorante La Collina');
+                localStorage.setItem('venueAddress', 'Via Roma, 15 - Milano');
+                
+                // DATA EVENTO (default: 1 mese nel futuro)
+                const defaultDate = new Date();
+                defaultDate.setMonth(defaultDate.getMonth() + 1);
+                const formattedDate = defaultDate.toISOString().split('T')[0];
+                const formattedTime = '15:00';
+                
+                localStorage.setItem('birthdayEventDate', formattedDate);
+                localStorage.setItem('birthdayEventTime', formattedTime);
+                
+                // DATI CONTATTI
+                localStorage.setItem('contactName1', 'Mamma Laura');
+                localStorage.setItem('contactName2', 'Papà Marco');
+                localStorage.setItem('contactPhone1', '+39 123 456 7890');
+                localStorage.setItem('contactPhone2', '+39 098 765 4321');
+                
+                // DATI FOOTER
+                localStorage.setItem('footerText', 'Con affetto, la famiglia Rossi');
+                
+                console.log("=== DATI DEFAULT INIZIALIZZATI ===");
+            }
+        }
+
+        // ========== GESTIONE ROBUSTA IMMAGINI ==========
+
+        function loadImagesSafely() {
+            // Immagine profilo
+            const profileImage = localStorage.getItem('profileImage');
+            const profileImgElement = document.getElementById('profileImage');
+            
+            if (profileImage) {
+                profileImgElement.src = profileImage;
+            } else {
+                // Fallback all'immagine del tema
+                const currentTheme = localStorage.getItem('birthdayTheme') || 'theme-1';
+                profileImgElement.src = `/compleanno/img/profile-${currentTheme.replace('theme-', '')}${currentTheme === 'theme-1' ? 'anno' : currentTheme === 'theme-18' ? 'anni' : 'anni'}.jpg`;
+            }
+            
+            // Immagine invito
+            const invitoImage = localStorage.getItem('invitoImage');
+            const invitoImgElement = document.getElementById('invitoImage');
+            
+            if (invitoImage) {
+                invitoImgElement.src = invitoImage;
+            } else {
+                // Fallback all'immagine del tema
+                const currentTheme = localStorage.getItem('birthdayTheme') || 'theme-1';
+                invitoImgElement.src = `/compleanno/img/profile-${currentTheme.replace('theme-', '')}${currentTheme === 'theme-1' ? 'anno' : currentTheme === 'theme-18' ? 'anni' : 'anni'}.jpg`;
+            }
+            
+            // Gestione errori immagini
+            profileImgElement.onerror = function() {
+                const currentTheme = localStorage.getItem('birthdayTheme') || 'theme-1';
+                this.src = `/compleanno/img/profile-${currentTheme.replace('theme-', '')}${currentTheme === 'theme-1' ? 'anno' : currentTheme === 'theme-18' ? 'anni' : 'anni'}.jpg`;
+            };
+            
+            invitoImgElement.onerror = function() {
+                const currentTheme = localStorage.getItem('birthdayTheme') || 'theme-1';
+                this.src = `/compleanno/img/profile-${currentTheme.replace('theme-', '')}${currentTheme === 'theme-1' ? 'anno' : currentTheme === 'theme-18' ? 'anni' : 'anni'}.jpg`;
+            };
+        }
+
+        // ========== PRELOAD DATA - ELIMINA FLASH CONTENT ==========
+        
+        // Funzione per caricare tutti i dati immediatamente
+        function loadAllDataImmediately() {
+            console.log("=== CARICAMENTO IMMEDIATO DATI ADMIN ===");
+            
+            // HOME - Carica subito i dati critici
+            const birthdayPersonName = localStorage.getItem('birthdayPersonName');
+            const birthdayDetails = localStorage.getItem('birthdayDetails');
+            
+            if (birthdayPersonName) {
+                document.getElementById('birthdayPersonName').textContent = birthdayPersonName;
+                document.getElementById('birthdayPersonCardName').textContent = birthdayPersonName.split(' ')[0] + ' ♡';
+            }
+            
+            if (birthdayDetails) {
+                document.getElementById('birthdayDetails').textContent = birthdayDetails;
+            }
+            
+            // TESTO INVITO
+            const invitoText1 = localStorage.getItem('invitoText1');
+            const invitoText2 = localStorage.getItem('invitoText2');
+            const invitoText3 = localStorage.getItem('invitoText3');
+            
+            if (invitoText1) document.getElementById('invitoText1').textContent = invitoText1;
+            if (invitoText2) document.getElementById('invitoText2').textContent = invitoText2;
+            if (invitoText3) document.getElementById('invitoText3').textContent = invitoText3;
+            
+            // FESTEGGIATI
+            const birthdayPersonMessage = localStorage.getItem('birthdayPersonMessage');
+            const parentsName = localStorage.getItem('parentsName');
+            const specialGuestsName = localStorage.getItem('specialGuestsName');
+            
+            if (birthdayPersonMessage) document.getElementById('birthdayPersonMessage').textContent = birthdayPersonMessage;
+            if (parentsName) document.getElementById('parentsName').textContent = parentsName;
+            if (specialGuestsName) document.getElementById('specialGuestsName').textContent = specialGuestsName;
+            
+            // LUOGHI
+            const partyLocation = localStorage.getItem('partyLocation');
+            const partyAddress = localStorage.getItem('partyAddress');
+            
+            if (partyLocation) document.getElementById('partyLocation').textContent = partyLocation;
+            if (partyAddress) document.getElementById('partyAddress').textContent = partyAddress;
+            
+            // CONTATTI
+            const contactName1 = localStorage.getItem('contactName1');
+            const contactName2 = localStorage.getItem('contactName2');
+            const contactPhone1 = localStorage.getItem('contactPhone1');
+            const contactPhone2 = localStorage.getItem('contactPhone2');
+            
+            if (contactName1) document.getElementById('contactName1').textContent = contactName1;
+            if (contactName2) document.getElementById('contactName2').textContent = contactName2;
+            if (contactPhone1) document.getElementById('contactPhone1').textContent = contactPhone1;
+            if (contactPhone2) document.getElementById('contactPhone2').textContent = contactPhone2;
+            
+            // FOOTER
+            const footerText = localStorage.getItem('footerText');
+            if (footerText) document.getElementById('footerText').textContent = footerText;
+            
+            // CARICA IMMAGINI IN MODO SICURO
+            loadImagesSafely();
+            
+            // COUNTDOWN - Aggiorna immediatamente
+            updateCountdownImmediately();
+            updateNewCountdownImmediately();
+            updatePartyDetailsImmediately();
+            
+            console.log("=== DATI CARICATI IMMEDIATAMENTE ===");
+        }
+
+        // Countdown immediato senza attese
+        function updateCountdownImmediately() {
+            const eventDate = getEventDate();
+            const now = new Date().getTime();
+            const distance = eventDate - now;
+            
+            if (distance < 0) {
+                document.getElementById('countdown').style.display = 'none';
+                return;
+            }
+            
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').innerHTML = days.toString().padStart(2, '0');
+            document.getElementById('hours').innerHTML = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').innerHTML = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').innerHTML = seconds.toString().padStart(2, '0');
+        }
+
+        function updateNewCountdownImmediately() {
+            const eventDate = getEventDate();
+            const now = new Date().getTime();
+            const distance = eventDate - now;
+            
+            if (distance < 0) {
+                document.getElementById('newCountdown').innerHTML = "<h3>Il grande giorno è arrivato!</h3>";
+                return;
+            }
+            
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            document.getElementById('newDays').innerHTML = days.toString().padStart(2, '0');
+            document.getElementById('newHours').innerHTML = hours.toString().padStart(2, '0');
+            document.getElementById('newMinutes').innerHTML = minutes.toString().padStart(2, '0');
+            document.getElementById('newSeconds').innerHTML = seconds.toString().padStart(2, '0');
+        }
+
+        function updatePartyDetailsImmediately() {
+            const savedDate = localStorage.getItem('birthdayEventDate');
+            const savedTime = localStorage.getItem('birthdayEventTime');
+            
+            if (savedDate && savedTime) {
+                const eventDate = new Date(`${savedDate}T${savedTime}`);
+                const options = { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric'
+                };
+                const timeOptions = {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                };
+                
+                const formattedDate = eventDate.toLocaleDateString('it-IT', options);
+                const formattedTime = eventDate.toLocaleTimeString('it-IT', timeOptions);
+                
+                document.getElementById('partyDate').textContent = formattedDate;
+                document.getElementById('partyTime').textContent = `Ore ${formattedTime}`;
+            }
+        }
+
+        // Sostituisci la funzione esistente getEventDate() con questa versione più robusta
+        function getEventDate() {
+            const savedDate = localStorage.getItem('birthdayEventDate');
+            const savedTime = localStorage.getItem('birthdayEventTime');
+            
+            if (savedDate && savedTime) {
+                return new Date(`${savedDate}T${savedTime}`).getTime();
+            }
+            
+            // Data di fallback - usa una data futura di default
+            const defaultDate = new Date();
+            defaultDate.setMonth(defaultDate.getMonth() + 1); // 1 mese nel futuro
+            defaultDate.setHours(15, 0, 0, 0); // Ore 15:00
+            
+            return defaultDate.getTime();
+        }
+
         // ========== SISTEMA TEMI ==========
         
         // Configurazione temi
@@ -1413,179 +1672,27 @@
             
             // Countdown section background  
             document.getElementById('countdown-section').style.backgroundImage = `url('${images.countdownBg}')`;
-            
-            // Profile images
-            const profileImages = document.querySelectorAll('#profileImage, #invitoImage');
-            profileImages.forEach(img => {
-                img.src = images.profile;
-            });
         }
 
-        // ========== FUNZIONI ESISTENTI ADATTATE ==========
-        
-        // Funzione per ottenere la data dell'evento dal localStorage
-        function getEventDate() {
-            const savedDate = localStorage.getItem('birthdayEventDate');
-            const savedTime = localStorage.getItem('birthdayEventTime');
+        // ========== INIZIALIZZAZIONE MIGLIORATA ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('=== PAGINA CARICATA - INIZIALIZZAZIONE MIGLIORATA ===');
             
-            if (savedDate && savedTime) {
-                return new Date(`${savedDate}T${savedTime}`).getTime();
-            }
+            // 1. INIZIALIZZA DATI DEFAULT (se necessario)
+            initializeDefaultData();
             
-            // Data di fallback predefinita
-            return new Date('2023-06-10T15:00:00').getTime();
-        }
-        
-        // Countdown principale nell'header
-        function updateCountdown() {
-            const eventDate = getEventDate();
-            const now = new Date().getTime();
-            const distance = eventDate - now;
-            
-            if (distance < 0) {
-                document.getElementById('countdown').style.display = 'none';
-                return;
-            }
-            
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            
-            document.getElementById('days').innerHTML = days.toString().padStart(2, '0');
-            document.getElementById('hours').innerHTML = hours.toString().padStart(2, '0');
-            document.getElementById('minutes').innerHTML = minutes.toString().padStart(2, '0');
-            document.getElementById('seconds').innerHTML = seconds.toString().padStart(2, '0');
-        }
-        
-        // Nuovo countdown nella sezione dedicata
-        function updateNewCountdown() {
-            const eventDate = getEventDate();
-            const now = new Date().getTime();
-            const distance = eventDate - now;
-            
-            if (distance < 0) {
-                document.getElementById('newCountdown').innerHTML = "<h3>Il grande giorno è arrivato!</h3>";
-                return;
-            }
-            
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            
-            document.getElementById('newDays').innerHTML = days.toString().padStart(2, '0');
-            document.getElementById('newHours').innerHTML = hours.toString().padStart(2, '0');
-            document.getElementById('newMinutes').innerHTML = minutes.toString().padStart(2, '0');
-            document.getElementById('newSeconds').innerHTML = seconds.toString().padStart(2, '0');
-        }
-        
-        // Carica i dati dal localStorage e aggiorna la pagina
-        function loadAdminData() {
-            console.log("Caricamento dati admin...");
-            
-            // Home
-            const birthdayPersonName = localStorage.getItem('birthdayPersonName');
-            const birthdayDetails = localStorage.getItem('birthdayDetails');
-            
-            if (birthdayPersonName) {
-                document.getElementById('birthdayPersonName').textContent = birthdayPersonName;
-                document.getElementById('birthdayPersonCardName').textContent = birthdayPersonName.split(' ')[0] + ' ♡';
-            }
-            if (birthdayDetails) {
-                document.getElementById('birthdayDetails').textContent = birthdayDetails;
-            }
-            
-            // Invito
-            const invitoText1 = localStorage.getItem('invitoText1');
-            const invitoText2 = localStorage.getItem('invitoText2');
-            const invitoText3 = localStorage.getItem('invitoText3');
-            const invitoImage = localStorage.getItem('invitoImage');
-            
-            if (invitoText1) document.getElementById('invitoText1').textContent = invitoText1;
-            if (invitoText2) document.getElementById('invitoText2').textContent = invitoText2;
-            if (invitoText3) document.getElementById('invitoText3').textContent = invitoText3;
-            if (invitoImage) document.getElementById('invitoImage').src = invitoImage;
-            
-            // Festeggiati
-            const birthdayPersonMessage = localStorage.getItem('birthdayPersonMessage');
-            const parentsName = localStorage.getItem('parentsName');
-            const specialGuestsName = localStorage.getItem('specialGuestsName');
-            const profileImage = localStorage.getItem('profileImage');
-            
-            if (birthdayPersonMessage) document.getElementById('birthdayPersonMessage').textContent = birthdayPersonMessage;
-            if (parentsName) document.getElementById('parentsName').textContent = parentsName;
-            if (specialGuestsName) document.getElementById('specialGuestsName').textContent = specialGuestsName;
-            
-            // IMMAGINE PROFILO
-            if (profileImage) {
-                document.getElementById('profileImage').src = profileImage;
-            }
-            
-            // Luoghi
-            const partyLocation = localStorage.getItem('partyLocation');
-            const partyAddress = localStorage.getItem('partyAddress');
-            const receptionLocation = localStorage.getItem('receptionLocation');
-            const receptionAddress = localStorage.getItem('receptionAddress');
-            
-            if (partyLocation) document.getElementById('partyLocation').textContent = partyLocation;
-            if (partyAddress) document.getElementById('partyAddress').textContent = partyAddress;
-            if (receptionLocation) document.getElementById('receptionLocation').textContent = receptionLocation;
-            if (receptionAddress) document.getElementById('receptionAddress').textContent = receptionAddress;
-            
-            // Contatti
-            const contactName1 = localStorage.getItem('contactName1');
-            const contactName2 = localStorage.getItem('contactName2');
-            const contactPhone1 = localStorage.getItem('contactPhone1');
-            const contactPhone2 = localStorage.getItem('contactPhone2');
-            
-            if (contactName1) document.getElementById('contactName1').textContent = contactName1;
-            if (contactName2) document.getElementById('contactName2').textContent = contactName2;
-            if (contactPhone1) document.getElementById('contactPhone1').textContent = contactPhone1;
-            if (contactPhone2) document.getElementById('contactPhone2').textContent = contactPhone2;
-            
-            // Footer
-            const footerText = localStorage.getItem('footerText');
-            if (footerText) document.getElementById('footerText').textContent = footerText;
-            
-            // Countdown - aggiorna data e ora della festa
-            updatePartyDetails();
-        }
-        
-        // Aggiorna i dettagli della festa in base alla data salvata
-        function updatePartyDetails() {
-            const savedDate = localStorage.getItem('birthdayEventDate');
-            const savedTime = localStorage.getItem('birthdayEventTime');
-            
-            if (savedDate && savedTime) {
-                const eventDate = new Date(`${savedDate}T${savedTime}`);
-                const options = { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric'
-                };
-                const timeOptions = {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                };
-                
-                const formattedDate = eventDate.toLocaleDateString('it-IT', options);
-                const formattedTime = eventDate.toLocaleTimeString('it-IT', timeOptions);
-                
-                document.getElementById('partyDate').textContent = formattedDate;
-                document.getElementById('partyTime').textContent = `Ore ${formattedTime}`;
-            }
-        }
-
-        // ========== INIZIALIZZAZIONE ==========
-        window.onload = function() {
-            console.log('=== PAGINA CARICATA ===');
-            
-            // CARICA TEMA
+            // 2. CARICA TEMA
             loadSavedTheme();
             
-            // ANIMAZIONI
+            // 3. CARICA TUTTI I DATI IMMEDIATAMENTE
+            loadAllDataImmediately();
+            
+            // 4. MOSTRA LA PAGINA
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+            }, 100);
+            
+            // 5. ANIMAZIONI
             const fadeElements = document.querySelectorAll('.fade-in');
             fadeElements.forEach((el, index) => {
                 setTimeout(() => {
@@ -1594,24 +1701,16 @@
                 }, index * 200);
             });
             
-            // ELEMENTI DECORATIVI TEMATICI
+            // 6. ELEMENTI DECORATIVI TEMATICI
             createThemeElements();
             
-            // MENU ATTIVO
+            // 7. MENU ATTIVO
             handleActiveMenu();
             
-            // CARICA DATI ADMIN
-            loadAdminData();
-            
-            // UPLOAD
-            checkUploadVisibility();
+            // 8. ALTRE INIZIALIZZAZIONI
             setupFileUpload();
             
-            // COUNTDOWN
-            updateCountdown();
-            updateNewCountdown();
-            
-            // RSVP
+            // 9. RSVP
             const rsvpForm = document.querySelector('form[action="send_email.php"]');
             if (rsvpForm) {
                 rsvpForm.addEventListener('submit', function(e) {
@@ -1620,20 +1719,20 @@
                 });
             }
             
-            // GALLERIA
+            // 10. GALLERIA (dopo un breve delay)
             setTimeout(() => {
                 console.log('🎯 Inizializzazione galleria...');
                 loadGalleryImages();
                 setupTouchEvents();
             }, 500);
-        };
+        });
 
         // AGGIORNA COUNTDOWN
-        setInterval(updateCountdown, 1000);
-        setInterval(updateNewCountdown, 1000);
-        setInterval(checkUploadVisibility, 60000);
+        setInterval(updateCountdownImmediately, 1000);
+        setInterval(updateNewCountdownImmediately, 1000);
 
-        // Crea elementi decorativi tematici
+        // ========== FUNZIONI ESISTENTI ==========
+        
         function createThemeElements() {
             const header = document.querySelector('header');
             for (let i = 0; i < 15; i++) {
@@ -1649,7 +1748,6 @@
             }
         }
         
-        // Gestione menu attivo durante lo scroll
         function handleActiveMenu() {
             const sections = document.querySelectorAll('section, header');
             const menuItems = document.querySelectorAll('.menu-item');
