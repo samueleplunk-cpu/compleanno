@@ -14,8 +14,7 @@ try {
         exit;
     }
     
-    // Verifica che il percorso sia valido (solo nella cartella default)
-    $realBasePath = realpath('assets/images/default-gallery') . DIRECTORY_SEPARATOR;
+    $realBasePath = realpath('img') . DIRECTORY_SEPARATOR;
     $realOldPath = realpath($oldImagePath);
     
     if ($realOldPath === false || strpos($realOldPath, $realBasePath) !== 0) {
@@ -24,9 +23,8 @@ try {
         exit;
     }
     
-    // Validazione nuovo file
     $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
-    $maxSize = 5 * 1024 * 1024; // 5MB
+    $maxSize = 5 * 1024 * 1024;
     
     $fileType = strtolower(pathinfo($newImageFile['name'], PATHINFO_EXTENSION));
     $fileSize = $newImageFile['size'];
@@ -43,14 +41,12 @@ try {
         exit;
     }
     
-    // Elimina il vecchio file
     if (!unlink($realOldPath)) {
         $response['error'] = 'Impossibile eliminare il vecchio file';
         echo json_encode($response);
         exit;
     }
     
-    // Salva il nuovo file con lo stesso nome
     $newFileName = basename($oldImagePath);
     $destination = dirname($oldImagePath) . '/' . $newFileName;
     

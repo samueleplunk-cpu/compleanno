@@ -16,8 +16,7 @@ try {
     }
     
     if ($isDefault) {
-        // Eliminazione immagine default
-        $realBasePath = realpath('assets/images/default-gallery') . DIRECTORY_SEPARATOR;
+        $realBasePath = realpath('img') . DIRECTORY_SEPARATOR;
         $realFilePath = realpath($filePath);
         
         if ($realFilePath === false || strpos($realFilePath, $realBasePath) !== 0) {
@@ -26,14 +25,12 @@ try {
             exit;
         }
         
-        // Controlla che il file esista
         if (!file_exists($realFilePath)) {
             $response['error'] = 'File default non trovato';
             echo json_encode($response);
             exit;
         }
         
-        // Elimina il file default
         if (unlink($realFilePath)) {
             $response['success'] = true;
             $response['message'] = 'Immagine default eliminata con successo';
@@ -41,8 +38,7 @@ try {
             $response['error'] = 'Impossibile eliminare il file default';
         }
     } else {
-        // Eliminazione immagine utente (codice esistente)
-        $realBasePath = realpath('uploads/gallery') . DIRECTORY_SEPARATOR;
+        $realBasePath = realpath('uploads') . DIRECTORY_SEPARATOR;
         $realFilePath = realpath($filePath);
         
         if ($realFilePath === false || strpos($realFilePath, $realBasePath) !== 0) {
@@ -51,16 +47,15 @@ try {
             exit;
         }
         
-        // Controlla che il file esista
         if (!file_exists($realFilePath)) {
             $response['error'] = 'File non trovato';
             echo json_encode($response);
             exit;
         }
         
-        // Elimina il file
         if (unlink($realFilePath)) {
             $response['success'] = true;
+            $response['message'] = 'Foto eliminata con successo';
         } else {
             $response['error'] = 'Impossibile eliminare il file';
         }

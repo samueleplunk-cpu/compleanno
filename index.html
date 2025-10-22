@@ -477,7 +477,7 @@
             justify-content: center;
             gap: 40px;
             margin-top: 30px;
-            max-width: 700px; /* Riduci la larghezza massima per 2 card */
+            max-width: 700px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -844,16 +844,25 @@
             background-color: #d4edda; 
             color: #155724; 
             border: 1px solid #c3e6cb; 
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
         }
         .error-message { 
             background-color: #f8d7da; 
             color: #721c24; 
             border: 1px solid #f5c6cb; 
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
         }
         .info-message { 
             background-color: #d1ecf1; 
             color: #0c5460; 
             border: 1px solid #bee5eb; 
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
         }
 
         /* Responsive */
@@ -960,6 +969,10 @@
 
             .lightbox-next {
                 right: 10px;
+            }
+
+            .gallery-group {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -1328,14 +1341,11 @@
         // ========== DATI DI DEFAULT PER PRIMO ACCESSO ==========
 
         function initializeDefaultData() {
-            // Controlla se è il primo accesso (localStorage vuoto)
             const hasData = localStorage.getItem('birthdayPersonName') || 
                             localStorage.getItem('birthdayEventDate') ||
                             localStorage.getItem('invitoText1');
             
             if (!hasData) {
-                console.log("=== INIZIALIZZAZIONE DATI DEFAULT ===");
-                
                 // DATI HOME
                 localStorage.setItem('birthdayPersonName', 'Emma Rossi');
                 localStorage.setItem('birthdayDetails', 'Compie 1 anno!');
@@ -1371,8 +1381,6 @@
                 
                 // DATI FOOTER
                 localStorage.setItem('footerText', 'Con affetto, la famiglia Rossi');
-                
-                console.log("=== DATI DEFAULT INIZIALIZZATI ===");
             }
         }
 
@@ -1386,7 +1394,6 @@
             if (profileImage) {
                 profileImgElement.src = profileImage;
             } else {
-                // Fallback all'immagine del tema
                 const currentTheme = localStorage.getItem('birthdayTheme') || 'theme-1';
                 profileImgElement.src = `/compleanno/img/profile-${currentTheme.replace('theme-', '')}${currentTheme === 'theme-1' ? 'anno' : currentTheme === 'theme-18' ? 'anni' : 'anni'}.jpg`;
             }
@@ -1398,7 +1405,6 @@
             if (invitoImage) {
                 invitoImgElement.src = invitoImage;
             } else {
-                // Fallback all'immagine del tema
                 const currentTheme = localStorage.getItem('birthdayTheme') || 'theme-1';
                 invitoImgElement.src = `/compleanno/img/profile-${currentTheme.replace('theme-', '')}${currentTheme === 'theme-1' ? 'anno' : currentTheme === 'theme-18' ? 'anni' : 'anni'}.jpg`;
             }
@@ -1417,10 +1423,7 @@
 
         // ========== PRELOAD DATA - ELIMINA FLASH CONTENT ==========
         
-        // Funzione per caricare tutti i dati immediatamente
         function loadAllDataImmediately() {
-            console.log("=== CARICAMENTO IMMEDIATO DATI ADMIN ===");
-            
             // HOME - Carica subito i dati critici
             const birthdayPersonName = localStorage.getItem('birthdayPersonName');
             const birthdayDetails = localStorage.getItem('birthdayDetails');
@@ -1481,8 +1484,6 @@
             updateCountdownImmediately();
             updateNewCountdownImmediately();
             updatePartyDetailsImmediately();
-            
-            console.log("=== DATI CARICATI IMMEDIATAMENTE ===");
         }
 
         // Countdown immediato senza attese
@@ -1553,7 +1554,6 @@
             }
         }
 
-        // Sostituisci la funzione esistente getEventDate() con questa versione più robusta
         function getEventDate() {
             const savedDate = localStorage.getItem('birthdayEventDate');
             const savedTime = localStorage.getItem('birthdayEventTime');
@@ -1562,17 +1562,15 @@
                 return new Date(`${savedDate}T${savedTime}`).getTime();
             }
             
-            // Data di fallback - usa una data futura di default
             const defaultDate = new Date();
-            defaultDate.setMonth(defaultDate.getMonth() + 1); // 1 mese nel futuro
-            defaultDate.setHours(15, 0, 0, 0); // Ore 15:00
+            defaultDate.setMonth(defaultDate.getMonth() + 1);
+            defaultDate.setHours(15, 0, 0, 0);
             
             return defaultDate.getTime();
         }
 
         // ========== SISTEMA TEMI ==========
         
-        // Configurazione temi
         const themes = {
             'theme-1': {
                 name: '1° Compleanno',
@@ -1633,46 +1631,300 @@
             }
         };
 
-        // Carica tema salvato
         function loadSavedTheme() {
             const savedTheme = localStorage.getItem('birthdayTheme') || 'theme-1';
             applyTheme(savedTheme);
         }
 
-        // Applica tema
         function applyTheme(themeClass) {
-            // Rimuovi tutte le classi tema
             document.body.classList.remove('theme-1', 'theme-18', 'theme-50');
-            // Aggiungi classe tema selezionato
             document.body.classList.add(themeClass);
             
             const theme = themes[themeClass];
             
-            // Aggiorna indicatori
             document.getElementById('themeIndicator').textContent = theme.name;
-            
-            // Aggiorna immagini tema
             updateThemeImages(theme.images);
-            
-            // Salva preferenza
             localStorage.setItem('birthdayTheme', themeClass);
-            
-            console.log(`Tema applicato: ${theme.name}`);
         }
 
-        // Aggiorna immagini in base al tema
         function updateThemeImages(images) {
-            // Header background
             document.querySelector('header').style.backgroundImage = `url('${images.headerBg}')`;
-            
-            // Countdown section background  
             document.getElementById('countdown-section').style.backgroundImage = `url('${images.countdownBg}')`;
+        }
+
+        // ========== FUNZIONI GALLERIA MIGLIORATE ==========
+
+        let currentGalleryGroup = 0;
+        let totalGalleryGroups = 0;
+        let currentLightboxIndex = 0;
+        let currentLightboxImages = [];
+
+        function loadGalleryImages() {
+            fetch('get_gallery.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Errore di rete: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        displayGalleryImages(data.photos);
+                    } else {
+                        showGalleryError(data.error || 'Errore nel caricamento della galleria');
+                    }
+                })
+                .catch(error => {
+                    showGalleryError('Errore di connessione: ' + error.message);
+                });
+        }
+
+        function displayGalleryImages(photos) {
+            const galleryTrack = document.getElementById('galleryMultiTrack');
+            const indicators = document.getElementById('galleryMultiIndicators');
+            
+            if (!photos || photos.length === 0) {
+                galleryTrack.innerHTML = '<div class="gallery-group"><div class="gallery-item empty-placeholder"></div></div>';
+                indicators.innerHTML = '';
+                return;
+            }
+            
+            const groups = [];
+            for (let i = 0; i < photos.length; i += 4) {
+                groups.push(photos.slice(i, i + 4));
+            }
+            
+            if (groups.length === 0) {
+                groups.push([]);
+            }
+            
+            galleryTrack.innerHTML = '';
+            indicators.innerHTML = '';
+            
+            groups.forEach((group, groupIndex) => {
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'gallery-group';
+                
+                group.forEach(photo => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'gallery-item';
+                    itemDiv.onclick = () => openLightbox(photos, groupIndex * 4 + group.indexOf(photo));
+                    
+                    const img = document.createElement('img');
+                    img.src = photo.thumbnail || photo.fullPath;
+                    img.alt = photo.name;
+                    img.onerror = function() {
+                        this.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><rect width="200" height="200" fill="%23f0f0f0"/><text x="100" y="100" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle">Immagine non disponibile</text></svg>';
+                    };
+                    
+                    itemDiv.appendChild(img);
+                    groupDiv.appendChild(itemDiv);
+                });
+                
+                while (groupDiv.children.length < 4) {
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'gallery-item empty-placeholder';
+                    placeholder.style.display = 'none';
+                    groupDiv.appendChild(placeholder);
+                }
+                
+                galleryTrack.appendChild(groupDiv);
+                
+                const indicator = document.createElement('div');
+                indicator.className = `gallery-multi-indicator ${groupIndex === 0 ? 'active' : ''}`;
+                indicator.onclick = () => showGalleryGroup(groupIndex);
+                indicators.appendChild(indicator);
+            });
+            
+            currentGalleryGroup = 0;
+            totalGalleryGroups = groups.length;
+        }
+
+        function showGalleryError(message) {
+            const galleryTrack = document.getElementById('galleryMultiTrack');
+            galleryTrack.innerHTML = `
+                <div style="text-align: center; padding: 40px; color: var(--color-light-text); grid-column: 1 / -1;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                    <p>${message}</p>
+                    <button class="btn" onclick="loadGalleryImages()" style="margin-top: 15px;">
+                        <i class="fas fa-redo"></i> Riprova
+                    </button>
+                </div>
+            `;
+        }
+
+        function showGalleryGroup(index) {
+            if (index < 0 || index >= totalGalleryGroups) return;
+            
+            const track = document.getElementById('galleryMultiTrack');
+            const indicators = document.querySelectorAll('.gallery-multi-indicator');
+            
+            track.style.transform = `translateX(-${index * 100}%)`;
+            
+            indicators.forEach((ind, i) => {
+                ind.classList.toggle('active', i === index);
+            });
+            
+            currentGalleryGroup = index;
+        }
+
+        // ========== LIGHTBOX FUNCTIONS ==========
+
+        function openLightbox(images, index) {
+            currentLightboxImages = images;
+            currentLightboxIndex = index;
+            
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightboxImg');
+            const lightboxCaption = document.getElementById('lightboxCaption');
+            
+            lightboxImg.src = images[index].fullPath;
+            lightboxCaption.textContent = images[index].name;
+            
+            lightbox.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function lightboxPrev() {
+            if (currentLightboxIndex > 0) {
+                currentLightboxIndex--;
+            } else {
+                currentLightboxIndex = currentLightboxImages.length - 1;
+            }
+            updateLightboxImage();
+        }
+
+        function lightboxNext() {
+            if (currentLightboxIndex < currentLightboxImages.length - 1) {
+                currentLightboxIndex++;
+            } else {
+                currentLightboxIndex = 0;
+            }
+            updateLightboxImage();
+        }
+
+        function updateLightboxImage() {
+            const lightboxImg = document.getElementById('lightboxImg');
+            const lightboxCaption = document.getElementById('lightboxCaption');
+            
+            lightboxImg.src = currentLightboxImages[currentLightboxIndex].fullPath;
+            lightboxCaption.textContent = currentLightboxImages[currentLightboxIndex].name;
+        }
+
+        // ========== UPLOAD FUNCTIONS ==========
+
+        function setupFileUpload() {
+            const uploadForm = document.getElementById('upload-form');
+            const fileInput = document.getElementById('photo-upload');
+            const fileList = document.getElementById('file-list');
+            const uploadMessage = document.getElementById('upload-message');
+            
+            fileInput.addEventListener('change', function(e) {
+                fileList.innerHTML = '';
+                const files = e.target.files;
+                
+                if (files.length > 0) {
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+                        const fileItem = document.createElement('div');
+                        fileItem.className = 'file-item';
+                        fileItem.innerHTML = `
+                            <i class="fas fa-image"></i> ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)
+                        `;
+                        fileList.appendChild(fileItem);
+                    }
+                }
+            });
+            
+            uploadForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const files = fileInput.files;
+                if (files.length === 0) {
+                    showUploadMessage('Seleziona almeno una foto da caricare.', 'error');
+                    return;
+                }
+                
+                const formData = new FormData();
+                for (let i = 0; i < files.length; i++) {
+                    formData.append('photos[]', files[i]);
+                }
+                
+                showUploadMessage('Caricamento in corso...', 'info');
+                
+                fetch('upload_gallery.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showUploadMessage(`${data.uploaded_count} foto caricate con successo!`, 'success');
+                        fileInput.value = '';
+                        fileList.innerHTML = '';
+                        loadGalleryImages();
+                    } else {
+                        showUploadMessage('Errore nel caricamento: ' + data.error, 'error');
+                    }
+                })
+                .catch(error => {
+                    showUploadMessage('Errore di connessione durante il caricamento', 'error');
+                });
+            });
+        }
+
+        function showUploadMessage(message, type) {
+            const uploadMessage = document.getElementById('upload-message');
+            uploadMessage.textContent = message;
+            uploadMessage.className = type + '-message';
+            uploadMessage.style.display = 'block';
+            
+            setTimeout(() => {
+                uploadMessage.style.display = 'none';
+            }, 5000);
+        }
+
+        // ========== TOUCH EVENTS FOR GALLERY ==========
+
+        function setupTouchEvents() {
+            const track = document.getElementById('galleryMultiTrack');
+            let startX = 0;
+            let currentX = 0;
+            let isDragging = false;
+            
+            track.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                isDragging = true;
+            });
+            
+            track.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                currentX = e.touches[0].clientX;
+                const diff = startX - currentX;
+                
+                if (Math.abs(diff) > 50) {
+                    if (diff > 0 && currentGalleryGroup < totalGalleryGroups - 1) {
+                        showGalleryGroup(currentGalleryGroup + 1);
+                    } else if (diff < 0 && currentGalleryGroup > 0) {
+                        showGalleryGroup(currentGalleryGroup - 1);
+                    }
+                    isDragging = false;
+                }
+            });
+            
+            track.addEventListener('touchend', () => {
+                isDragging = false;
+            });
         }
 
         // ========== INIZIALIZZAZIONE MIGLIORATA ==========
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('=== PAGINA CARICATA - INIZIALIZZAZIONE MIGLIORATA ===');
-            
             // 1. INIZIALIZZA DATI DEFAULT (se necessario)
             initializeDefaultData();
             
@@ -1714,9 +1966,8 @@
                 });
             }
             
-            // 10. GALLERIA (dopo un breve delay)
+            // 10. GALLERIA
             setTimeout(() => {
-                console.log('🎯 Inizializzazione galleria...');
                 loadGalleryImages();
                 setupTouchEvents();
             }, 500);
@@ -1767,9 +2018,35 @@
             });
         }
 
-        // ========== FUNZIONI GALLERIA (mantenute dalla versione originale) ==========
-        // ... [tutto il codice JavaScript per galleria, lightbox, upload etc. rimane uguale]
-        // Le funzioni loadGalleryImages, setupFileUpload, etc. vengono mantenute identiche
+        function saveRSVPToLocalStorage(formData) {
+            const rsvpData = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                adults: formData.get('adults'),
+                children: formData.get('children'),
+                message: formData.get('message'),
+                timestamp: new Date().toISOString()
+            };
+            
+            const existingRSVPs = JSON.parse(localStorage.getItem('birthdayRSVPs')) || [];
+            existingRSVPs.push(rsvpData);
+            localStorage.setItem('birthdayRSVPs', JSON.stringify(existingRSVPs));
+        }
+
+        // Keyboard navigation for lightbox
+        document.addEventListener('keydown', function(e) {
+            const lightbox = document.getElementById('lightbox');
+            if (lightbox.style.display === 'flex') {
+                if (e.key === 'Escape') {
+                    closeLightbox();
+                } else if (e.key === 'ArrowLeft') {
+                    lightboxPrev();
+                } else if (e.key === 'ArrowRight') {
+                    lightboxNext();
+                }
+            }
+        });
 
     </script>
 </body>

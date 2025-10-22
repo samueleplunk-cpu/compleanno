@@ -43,18 +43,18 @@ function formatFileSize($bytes) {
 
 function getDefaultImages() {
     $defaultImages = [];
-    $defaultDir = 'assets/images/default-gallery';
+    $defaultDir = 'img';
     
-    // Crea la directory se non esiste
-    if (!is_dir($defaultDir)) {
-        mkdir($defaultDir, 0755, true);
-    }
+    $defaultFiles = [
+        'gallery-default-1.jpg',
+        'gallery-default-2.jpg', 
+        'gallery-default-3.jpg',
+        'gallery-default-4.jpg'
+    ];
     
-    // Array delle 4 immagini default
-    $defaultFiles = ['default1.jpg', 'default2.jpg', 'default3.jpg', 'default4.jpg'];
-    
-    foreach ($defaultFiles as $defaultFile) {
+    foreach ($defaultFiles as $index => $defaultFile) {
         $filePath = $defaultDir . '/' . $defaultFile;
+        
         if (file_exists($filePath)) {
             $defaultImages[] = [
                 'name' => $defaultFile,
@@ -64,33 +64,79 @@ function getDefaultImages() {
                 'thumbnail' => $filePath,
                 'isDefault' => true
             ];
+        } else {
+            $placeholderPath = createDefaultImage($defaultDir, $defaultFile, $index + 1);
+            if ($placeholderPath) {
+                $defaultImages[] = [
+                    'name' => $defaultFile,
+                    'size' => '0.5 MB',
+                    'date' => date('d/m/Y H:i'),
+                    'fullPath' => $placeholderPath,
+                    'thumbnail' => $placeholderPath,
+                    'isDefault' => true
+                ];
+            }
         }
     }
     
     return $defaultImages;
 }
 
-$galleryDir = 'uploads/gallery';
+function createDefaultImage($dir, $filename, $number) {
+    if (!is_dir($dir)) {
+        mkdir($dir, 0755, true);
+    }
+    
+    $filePath = $dir . '/' . $filename;
+    $image = imagecreate(400, 400);
+    
+    $colors = [
+        imagecolorallocate($image, 255, 182, 193),
+        imagecolorallocate($image, 173, 216, 230),
+        imagecolorallocate($image, 255, 255, 153),
+        imagecolorallocate($image, 152, 251, 152)
+    ];
+    
+    $backgroundColor = $colors[($number - 1) % count($colors)];
+    $textColor = imagecolorallocate($image, 0, 0, 0);
+    
+    imagefill($image, 0, 0, $backgroundColor);
+    
+    $text = "Foto $number";
+    $font = 5;
+    $textWidth = imagefontwidth($font) * strlen($text);
+    $textHeight = imagefontheight($font);
+    $x = (400 - $textWidth) / 2;
+    $y = (400 - $textHeight) / 2;
+    
+    imagestring($image, $font, $x, $y, $text, $textColor);
+    
+    if (imagejpeg($image, $filePath, 80)) {
+        imagedestroy($image);
+        return $filePath;
+    }
+    
+    imagedestroy($image);
+    return false;
+}
+
+$galleryDir = 'uploads';
 $response = ['success' => false];
 
 try {
-    // Crea le directory se non esistono
     if (!is_dir($galleryDir)) {
         mkdir($galleryDir, 0755, true);
     }
     
-    $defaultDir = 'assets/images/default-gallery';
-    if (!is_dir($defaultDir)) {
-        mkdir($defaultDir, 0755, true);
+    if (!is_dir('img')) {
+        mkdir('img', 0755, true);
     }
     
     $photos = [];
     
-    // Aggiungi immagini default
     $defaultImages = getDefaultImages();
     $photos = array_merge($photos, $defaultImages);
     
-    // Aggiungi immagini caricate dagli utenti
     if (is_dir($galleryDir)) {
         $files = scandir($galleryDir);
         
@@ -119,8 +165,10 @@ try {
         }
     }
     
-    // Ordina per data (più recenti prima)
     usort($photos, function($a, $b) {
+        if ($a['isDefault'] && !$b['isDefault']) return -1;
+        if (!$a['isDefault'] && $b['isDefault']) return 1;
+        
         $timeA = $a['isDefault'] ? 0 : filemtime($a['fullPath']);
         $timeB = $b['isDefault'] ? 0 : filemtime($b['fullPath']);
         return $timeB - $timeA;
