@@ -751,7 +751,7 @@
                         </div>
                     </div>
                     
-                    <!-- SEZIONE LUOGHI -->
+                    <!-- SEZIONE LUOGHI - MODIFICATA: rimossi campi ristorante -->
                     <div class="admin-section" id="luoghiSection" style="display: none;">
                         <h2 class="section-title">Luoghi</h2>
                         
@@ -767,20 +767,6 @@
                             <input type="text" id="partyAddress" class="form-input" placeholder="Piazza del Duomo, 1 - Milano">
                             <button class="btn" onclick="saveLuoghiData()" style="margin-top: 10px;">Salva modifiche</button>
                             <div class="success-message" id="luoghiSuccess2">Modifiche salvate con successo!</div>
-                        </div>
-                        
-                        <div class="form-section">
-                            <label class="form-label" for="venueName">Nome del ristorante/ricevimento</label>
-                            <input type="text" id="venueName" class="form-input" placeholder="Ristorante La Collina">
-                            <button class="btn" onclick="saveLuoghiData()" style="margin-top: 10px;">Salva modifiche</button>
-                            <div class="success-message" id="luoghiSuccess3">Modifiche salvate con successo!</div>
-                        </div>
-                        
-                        <div class="form-section">
-                            <label class="form-label" for="venueAddress">Indirizzo del ristorante</label>
-                            <input type="text" id="venueAddress" class="form-input" placeholder="Via Roma, 15 - Milano">
-                            <button class="btn" onclick="saveLuoghiData()" style="margin-top: 10px;">Salva modifiche</button>
-                            <div class="success-message" id="luoghiSuccess4">Modifiche salvate con successo!</div>
                         </div>
                     </div>
                     
@@ -1724,11 +1710,9 @@
                 profileImagePreview.style.display = 'block';
             }
             
-            // Luoghi
+            // Luoghi - MODIFICATO: rimossi i campi ristorante
             document.getElementById('partyLocation').value = localStorage.getItem('partyLocation') || '';
             document.getElementById('partyAddress').value = localStorage.getItem('partyAddress') || '';
-            document.getElementById('venueName').value = localStorage.getItem('venueName') || '';
-            document.getElementById('venueAddress').value = localStorage.getItem('venueAddress') || '';
             
             // Countdown - Carica data e ora salvate
             const savedDate = localStorage.getItem('birthdayEventDate');
@@ -2505,23 +2489,17 @@ function confirmDelete() {
             debugSave('famiglia');
         }
         
-        // Salva dati Luoghi
+        // Salva dati Luoghi - MODIFICATA: rimossi i campi ristorante
         function saveLuoghiData() {
             localStorage.setItem('partyLocation', document.getElementById('partyLocation').value);
             localStorage.setItem('partyAddress', document.getElementById('partyAddress').value);
-            localStorage.setItem('venueName', document.getElementById('venueName').value);
-            localStorage.setItem('venueAddress', document.getElementById('venueAddress').value);
             
             // Mostra messaggio di successo
             document.getElementById('luoghiSuccess1').style.display = 'block';
             document.getElementById('luoghiSuccess2').style.display = 'block';
-            document.getElementById('luoghiSuccess3').style.display = 'block';
-            document.getElementById('luoghiSuccess4').style.display = 'block';
             setTimeout(() => {
                 document.getElementById('luoghiSuccess1').style.display = 'none';
                 document.getElementById('luoghiSuccess2').style.display = 'none';
-                document.getElementById('luoghiSuccess3').style.display = 'none';
-                document.getElementById('luoghiSuccess4').style.display = 'none';
             }, 3000);
             
             // Debug

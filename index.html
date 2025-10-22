@@ -477,6 +477,9 @@
             justify-content: center;
             gap: 40px;
             margin-top: 30px;
+            max-width: 700px; /* Riduci la larghezza massima per 2 card */
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .detail-card {
@@ -488,6 +491,9 @@
             box-shadow: var(--shadow);
             border: 1px solid rgba(255, 158, 201, 0.2);
             transition: transform 0.3s ease;
+            flex: 1;
+            min-width: 280px;
+            max-width: 320px;
         }
 
         .detail-card:hover {
@@ -1144,7 +1150,7 @@
         </div>
     </section>
 
-    <!-- Luoghi -->
+    <!-- Luoghi - MODIFICATA: rimossa la card "Rinfresco" -->
     <section id="luoghi">
         <div class="container">
             <h2 class="section-title">Dove e Quando</h2>
@@ -1165,15 +1171,6 @@
                     <h3 class="detail-title">Location Festa</h3>
                     <p class="detail-text" id="partyLocation">Salone Eventi "Il Giardino Incantato"</p>
                     <p class="detail-text" id="partyAddress">Piazza della Festa, 1 - Milano</p>
-                </div>
-                
-                <div class="detail-card fade-in">
-                    <div class="detail-icon">
-                        <i class="fas fa-utensils"></i>
-                    </div>
-                    <h3 class="detail-title">Rinfresco</h3>
-                    <p class="detail-text" id="receptionLocation">Buffet e Dolci</p>
-                    <p class="detail-text" id="receptionAddress">Servizio catering incluso</p>
                 </div>
             </div>
         </div>
@@ -1356,8 +1353,6 @@
                 // DATI LUOGHI
                 localStorage.setItem('partyLocation', 'Salone Eventi "Il Giardino Incantato"');
                 localStorage.setItem('partyAddress', 'Piazza della Festa, 1 - Milano');
-                localStorage.setItem('venueName', 'Ristorante La Collina');
-                localStorage.setItem('venueAddress', 'Via Roma, 15 - Milano');
                 
                 // DATA EVENTO (default: 1 mese nel futuro)
                 const defaultDate = new Date();
