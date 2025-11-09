@@ -2,7 +2,7 @@
 // === CONFIGURAZIONE EMAIL RSVP ===
 $to = getRsvpEmailFromConfig();
 if (!$to) {
-    $to = "test@test.it";
+    $to = "info@plunk.it";
     error_log("RSVP: Usando email di fallback: " . $to);
 }
 // === FINE CONFIGURAZIONE ===
@@ -19,10 +19,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     error_log("RSVP Ricevuto: $name, $email, Adulti: $adults, Bambini: $children, Destinazione: $to");
 
     // Oggetto dell'email
-    $subject = "Conferma Partecipazione Battesimo - " . $name;
+    $subject = "Conferma Partecipazione Compleanno - " . $name;
     
     // Corpo dell'email AGGIORNATO
-    $email_content = "CONFERMA DI PARTECIPAZIONE AL BATTESIMO\n\n";
+    $email_content = "CONFERMA DI PARTECIPAZIONE AL COMPLEANNO\n\n";
     $email_content .= "============================================\n";
     $email_content .= "NOME: $name\n";
     $email_content .= "EMAIL: $email\n";
@@ -32,10 +32,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email_content .= "MESSAGGIO: " . ($message_text ? $message_text : "Nessun messaggio") . "\n";
     $email_content .= "============================================\n\n";
     $email_content .= "Data e ora: " . date('d/m/Y H:i:s') . "\n";
-    $email_content .= "Sito web: " . $_SERVER['HTTP_HOST'] . "\n";
     
     // HEADERS MIGLIORATI per evitare SPAM
-    $headers = "From: \"Sito Battesimo\" <noreply@" . $_SERVER['HTTP_HOST'] . ">\r\n";
+    $headers = "From: \"Conferma RSVP\" <noreply@" . $_SERVER['HTTP_HOST'] . ">\r\n";
     $headers .= "Reply-To: \"$name\" <$email>\r\n";
     $headers .= "Return-Path: noreply@" . $_SERVER['HTTP_HOST'] . "\r\n";
     $headers .= "MIME-Version: 1.0\r\n";
