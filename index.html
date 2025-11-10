@@ -130,16 +130,16 @@
 
         /* Header */
         header {
-            background: var(--theme-header-bg, url('/compleanno/img/background-home-1anno.jpg') center/cover no-repeat);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
+    background: var(--theme-header-bg, url('/compleanno/img/background_hm.webp'), url('/img/background_hm.webp')) center/cover no-repeat;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
 
         .header-overlay {
             position: absolute;
@@ -471,6 +471,9 @@
         }
 
         /* Luoghi */
+		 #luoghi {
+    background-color: var(--color-light-bg);
+}
         .ceremony-details {
             display: flex;
             flex-wrap: wrap;
@@ -1648,9 +1651,10 @@
         }
 
         function updateThemeImages(images) {
-            document.querySelector('header').style.backgroundImage = `url('${images.headerBg}')`;
-            document.getElementById('countdown-section').style.backgroundImage = `url('${images.countdownBg}')`;
-        }
+    // Non sovrascrivere più lo sfondo dell'header qui
+    // Lascia che setHeaderBackground gestisca lo sfondo
+    document.getElementById('countdown-section').style.backgroundImage = `url('${images.countdownBg}')`;
+}
 
         // ========== FUNZIONI GALLERIA MIGLIORATE ==========
 
