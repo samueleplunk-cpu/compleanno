@@ -870,114 +870,212 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            .sidebar-menu {
-                display: none;
-            }
-            
-            .header-title {
-                font-size: 2.5rem;
-            }
-            
-            .birthday-person {
-                font-size: 2rem;
-            }
-            
-            .countdown {
-                flex-wrap: wrap;
-            }
-            
-            .countdown-item {
-                min-width: 70px;
-            }
-            
-            .section-title {
-                font-size: 1.8rem;
-            }
-            
-            .detail-card {
-                width: 100%;
-                max-width: 300px;
-            }
-            
-            .rsvp-form {
-                padding: 20px;
-            }
-            
-            .birthday-person-container {
-                margin-bottom: 30px;
-            }
-            
-            .birthday-person-image {
-                width: 100px;
-                height: 100px;
-            }
-            
-            .birthday-person-name {
-                font-size: 1.5rem;
-            }
-            
-            .birthday-person-message {
-                font-size: 0.9rem;
-            }
-            
-            .invito-container {
-                flex-direction: column;
-                gap: 30px;
-            }
-            
-            .invito-frame {
-                height: 400px;
-            }
-            
-            .invito-title {
-                font-size: 2rem;
-            }
-            
-            .member-icon {
-                width: 120px;
-                height: 120px;
-            }
-
-            footer {
-                padding: 30px 0;
-                margin-top: 40px;
-            }
-            
-            .footer-text {
-                font-size: 1.1rem;
-            }
-            
-            .footer-text:before, .footer-text:after {
-                margin: 0 10px;
-                font-size: 1rem;
-            }
-
-            .lightbox-close {
-                top: 10px;
-                right: 10px;
-                width: 40px;
-                height: 40px;
-                font-size: 1.5rem;
-            }
-
-            .lightbox-nav {
-                width: 40px;
-                height: 40px;
-                font-size: 1.2rem;
-            }
-
-            .lightbox-prev {
-                left: 10px;
-            }
-
-            .lightbox-next {
-                right: 10px;
-            }
-
-            .gallery-group {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
+    /* 1. Nascondere sidebar menu e sostituire con hamburger menu */
+    .sidebar-menu {
+        display: none;
+    }
+    
+    /* 2. Ridurre dimensioni font header e adattare layout countdown */
+    .header-title {
+        font-size: 2rem;
+    }
+    
+    .birthday-person {
+        font-size: 1.8rem;
+    }
+    
+    .birthday-details {
+        font-size: 1rem;
+    }
+    
+    .countdown {
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 30px 0;
+    }
+    
+    .countdown-item {
+        min-width: 60px;
+        padding: 12px 8px;
+    }
+    
+    .countdown-number {
+        font-size: 1.5rem;
+    }
+    
+    .countdown-label {
+        font-size: 0.7rem;
+    }
+    
+    /* 3. Cambiare sezione Invito da layout side-by-side a colonna singola */
+    .invito-container {
+        flex-direction: column;
+        gap: 30px;
+        text-align: center;
+    }
+    
+    .invito-frame {
+        height: 350px;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+    
+    .invito-title {
+        font-size: 1.8rem;
+    }
+    
+    .invito-message {
+        font-size: 1rem;
+    }
+    
+    /* 4. Rendere le card location a larghezza piena in colonna singola */
+    .ceremony-details {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .detail-card {
+        width: 100%;
+        max-width: 100%;
+        min-width: auto;
+        padding: 25px 20px;
+    }
+    
+    /* 5. Adattare galleria da 4 a 2 immagini per riga */
+    .gallery-group {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    
+    .gallery-item {
+        max-width: 100%;
+        max-height: 150px;
+    }
+    
+    /* 6. Adeguare form RSVP per mobile */
+    .rsvp-form {
+        padding: 20px 15px;
+        margin: 0 10px;
+    }
+    
+    .form-input, .form-select, .form-textarea {
+        padding: 10px 12px;
+        font-size: 16px; /* Previene zoom su iOS */
+    }
+    
+    /* 7. Aggiustare padding/margin generali e ridurre dimensioni font */
+    .section-title {
+        font-size: 1.6rem;
+        margin-bottom: 30px;
+    }
+    
+    section {
+        padding: 50px 0;
+    }
+    
+    .container {
+        padding: 0 15px;
+    }
+    
+    /* Aggiustamenti specifici per sezioni */
+    .birthday-person-container {
+        margin-bottom: 30px;
+    }
+    
+    .birthday-person-image {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .birthday-person-name {
+        font-size: 1.3rem;
+    }
+    
+    .birthday-person-message {
+        font-size: 0.9rem;
+    }
+    
+    .family-member {
+        width: 100%;
+        max-width: 250px;
+    }
+    
+    .member-icon {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .member-name {
+        font-size: 1.1rem;
+    }
+    
+    /* Footer mobile */
+    footer {
+        padding: 25px 0;
+        margin-top: 30px;
+    }
+    
+    .footer-text {
+        font-size: 1rem;
+    }
+    
+    .footer-text:before, .footer-text:after {
+        margin: 0 8px;
+        font-size: 0.9rem;
+    }
+    
+    /* Lightbox mobile */
+    .lightbox-close {
+        top: 10px;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
+    }
+    
+    .lightbox-nav {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+    
+    .lightbox-prev {
+        left: 10px;
+    }
+    
+    .lightbox-next {
+        right: 10px;
+    }
+    
+    .lightbox-content {
+        max-width: 95%;
+    }
+    
+    /* Contatti mobile */
+    .contact-info {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .contact-item {
+        width: 100%;
+    }
+    
+    /* Countdown section mobile */
+    #countdown-section {
+        padding: 50px 0;
+    }
+    
+    #countdown-section .countdown-item {
+        min-width: 55px;
+        padding: 10px 5px;
+    }
+    
+    #countdown-section .countdown-number {
+        font-size: 1.3rem;
+    }
+}
 
         /* Animazioni */
         @keyframes fadeIn {
