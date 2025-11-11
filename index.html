@@ -909,24 +909,48 @@
     
     /* 3. Cambiare sezione Invito da layout side-by-side a colonna singola */
     .invito-container {
-        flex-direction: column;
-        gap: 30px;
-        text-align: center;
-    }
-    
-    .invito-frame {
-        height: 350px;
-        max-width: 300px;
-        margin: 0 auto;
-    }
-    
-    .invito-title {
-        font-size: 1.8rem;
-    }
-    
-    .invito-message {
-        font-size: 1rem;
-    }
+    flex-direction: column;
+    gap: 30px;
+    text-align: center;
+}
+
+.invito-image {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.invito-frame {
+    height: 350px;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    border: 15px solid var(--color-primary);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    position: relative;
+    background-color: var(--color-white);
+}
+
+/* FIX COMPLETO PER L'IMMAGINE MOBILE */
+.invito-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.invito-title {
+    font-size: 1.8rem;
+}
+
+.invito-message {
+    font-size: 1rem;
+}
     
     /* 4. Rendere le card location a larghezza piena in colonna singola */
     .ceremony-details {
@@ -1439,6 +1463,183 @@
     </footer>
 
     <script>
+	// ========== SISTEMA AUTO-AGGIORNAMENTO MOBILE MIGLIORATO ==========
+
+function initializeMobileSync() {
+    console.log('🔄 MOBILE SYNC - Inizializzazione...');
+    
+    const currentVersion = localStorage.getItem('mobileCacheVersion') || '1';
+    console.log('📱 Versione locale corrente:', currentVersion);
+    
+    // PRIMA controlla rapidamente la versione sul server
+    checkVersionAndUpdate();
+    
+    // Poi imposta il polling regolare
+    startMobileSyncPolling();
+}
+
+function checkVersionAndUpdate() {
+    console.log('🔍 MOBILE SYNC - Controllo versione server...');
+    
+    fetch('save_mobile_data.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'action=get_version'
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Network error: ' + response.status);
+        return response.json();
+    })
+    .then(versionData => {
+        if (versionData.success) {
+            const serverVersion = versionData.version;
+            const currentVersion = localStorage.getItem('mobileCacheVersion') || '1';
+            
+            console.log('📊 MOBILE SYNC - Versioni:', {
+                server: serverVersion,
+                locale: currentVersion
+            });
+            
+            if (parseInt(serverVersion) > parseInt(currentVersion)) {
+                console.log('🎯 MOBILE SYNC - Aggiornamento disponibile! Caricamento dati...');
+                loadMobileDataFromServer();
+            } else {
+                console.log('ℹ️ MOBILE SYNC - Nessun aggiornamento necessario');
+            }
+        } else {
+            console.log('ℹ️ MOBILE SYNC - Nessun dato versione sul server');
+        }
+    })
+    .catch(error => {
+        console.error('❌ MOBILE SYNC - Errore controllo versione:', error);
+    });
+}
+
+function loadMobileDataFromServer() {
+    console.log('📥 MOBILE SYNC - Scaricamento dati dal server...');
+    
+    fetch('save_mobile_data.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'action=load'
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Network error: ' + response.status);
+        return response.json();
+    })
+    .then(serverData => {
+        if (serverData.success && serverData.data) {
+            const data = JSON.parse(serverData.data);
+            const serverVersion = serverData.version;
+            
+            console.log('📦 MOBILE SYNC - Dati ricevuti:', Object.keys(data).length, 'elementi');
+            
+            // Salva tutti i dati nel localStorage
+            let updatedCount = 0;
+            Object.keys(data).forEach(key => {
+                // Non sovrascrivere dati temporanei di sistema
+                if (!key.startsWith('_')) {
+                    localStorage.setItem(key, data[key]);
+                    updatedCount++;
+                }
+            });
+            
+            // Aggiorna versione
+            localStorage.setItem('mobileCacheVersion', serverVersion.toString());
+            localStorage.setItem('lastMobileUpdate', new Date().toISOString());
+            
+            console.log('✅ MOBILE SYNC - Aggiornamento completato!', updatedCount, 'elementi aggiornati');
+            
+            // Mostra notifica
+            showMobileUpdateNotification(updatedCount, serverVersion);
+            
+            // Ricarica la pagina per applicare i cambiamenti
+            setTimeout(() => {
+                console.log('🔄 MOBILE SYNC - Ricarico pagina...');
+                window.location.reload();
+            }, 2000);
+            
+        } else {
+            console.log('ℹ️ MOBILE SYNC - Nessun dato disponibile sul server');
+        }
+    })
+    .catch(error => {
+        console.error('❌ MOBILE SYNC - Errore caricamento dati:', error);
+    });
+}
+
+function startMobileSyncPolling() {
+    // Controlla aggiornamenti ogni 30 secondi
+    setInterval(() => {
+        checkVersionAndUpdate();
+    }, 30000); // 30 secondi
+    
+    console.log('🔄 MOBILE SYNC - Polling attivo (30s)');
+}
+
+function showMobileUpdateNotification(updateCount, newVersion) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #4CAF50;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 10000;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        max-width: 300px;
+        animation: slideIn 0.5s ease;
+    `;
+    
+    notification.innerHTML = `
+        <strong>🔄 Aggiornamento Completato!</strong><br>
+        <div style="margin-top: 8px;">
+        • ${updateCount} impostazioni aggiornate<br>
+        • Versione: ${newVersion}<br>
+        • Ricarico la pagina...
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Stile per l'animazione
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.5s ease forwards';
+        
+        const slideOutStyle = document.createElement('style');
+        slideOutStyle.textContent = `
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(slideOutStyle);
+        
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 500);
+    }, 4000);
+}
+	
         // ========== DATI DI DEFAULT PER PRIMO ACCESSO ==========
 
         function initializeDefaultData() {
@@ -2027,57 +2228,64 @@
 
         // ========== INIZIALIZZAZIONE MIGLIORATA ==========
         document.addEventListener('DOMContentLoaded', function() {
-            // 1. INIZIALIZZA DATI DEFAULT (se necessario)
-            initializeDefaultData();
-            
-            // 2. CARICA TEMA
-            loadSavedTheme();
-            
-            // 3. CARICA TUTTI I DATI IMMEDIATAMENTE
-            loadAllDataImmediately();
-            
-            // 4. MOSTRA LA PAGINA
-            setTimeout(() => {
-                document.body.classList.add('loaded');
-            }, 100);
-            
-            // 5. ANIMAZIONI
-            const fadeElements = document.querySelectorAll('.fade-in');
-            fadeElements.forEach((el, index) => {
-                setTimeout(() => {
-                    el.style.opacity = '1';
-                    el.style.transform = 'translateY(0)';
-                }, index * 200);
-            });
-            
-            // 6. ELEMENTI DECORATIVI TEMATICI
-            createThemeElements();
-            
-            // 7. MENU ATTIVO
-            handleActiveMenu();
-            
-            // 8. ALTRE INIZIALIZZAZIONI
-            setupFileUpload();
-            
-            // 9. RSVP
-            const rsvpForm = document.querySelector('form[action="send_email.php"]');
-            if (rsvpForm) {
-                rsvpForm.addEventListener('submit', function(e) {
-                    const formData = new FormData(this);
-                    saveRSVPToLocalStorage(formData);
-                });
-            }
-            
-            // 10. GALLERIA
-            setTimeout(() => {
-                loadGalleryImages();
-                setupTouchEvents();
-            }, 500);
+    // 0. PRIMA DI TUTTO: Controlla aggiornamenti mobile
+    initializeMobileSync();
+    
+    // 1. INIZIALIZZA DATI DEFAULT (se necessario)
+    initializeDefaultData();
+    
+    // 2. CARICA TEMA
+    loadSavedTheme();
+    
+    // 3. CARICA TUTTI I DATI IMMEDIATAMENTE
+    loadAllDataImmediately();
+    
+    // 4. MOSTRA LA PAGINA
+    setTimeout(() => {
+        document.body.classList.add('loaded');
+    }, 100);
+    
+    // 5. ANIMAZIONI
+    const fadeElements = document.querySelectorAll('.fade-in');
+    fadeElements.forEach((el, index) => {
+        setTimeout(() => {
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+        }, index * 200);
+    });
+    
+    // 6. ELEMENTI DECORATIVI TEMATICI
+    createThemeElements();
+    
+    // 7. MENU ATTIVO
+    handleActiveMenu();
+    
+    // 8. ALTRE INIZIALIZZAZIONI
+    setupFileUpload();
+    
+    // 9. RSVP
+    const rsvpForm = document.querySelector('form[action="send_email.php"]');
+    if (rsvpForm) {
+        rsvpForm.addEventListener('submit', function(e) {
+            const formData = new FormData(this);
+            saveRSVPToLocalStorage(formData);
         });
+    }
+    
+    // 10. GALLERIA
+    setTimeout(() => {
+        loadGalleryImages();
+        setupTouchEvents();
+    }, 500);
+});
 
         // AGGIORNA COUNTDOWN
         setInterval(updateCountdownImmediately, 1000);
         setInterval(updateNewCountdownImmediately, 1000);
+		
+		// CONTROLLO AUTOMATICO AGGIORNAMENTI MOBILE
+        console.log('🚀 Sistema aggiornamento mobile attivo');
+        console.log('Versione corrente:', localStorage.getItem('mobileCacheVersion') || '1');
 
         // ========== FUNZIONI ESISTENTI ==========
         

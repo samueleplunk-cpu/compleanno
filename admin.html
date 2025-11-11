@@ -649,6 +649,11 @@
                             <i class="fas fa-shoe-prints menu-icon"></i>
                             <span>Footer</span>
                         </li>
+						<!-- Pulsante Aggiornamento Mobile -->
+        <li class="menu-item" data-section="mobile-sync">
+            <i class="fas fa-sync-alt menu-icon"></i>
+            <span>Aggiorna Mobile</span>
+        </li>
                     </ul>
                 </div>
                 
@@ -1151,6 +1156,46 @@
                             <div class="success-message" id="contattiSuccess4">Modifiche salvate con successo!</div>
                         </div>
                     </div>
+					
+					<!-- Sezione Aggiornamento Mobile -->
+                    <div class="admin-section" id="mobile-syncSection" style="display: none;">
+                        <h2 class="section-title">🔄 Aggiornamento Mobile</h2>
+                        
+                        <div class="form-section" style="background-color: rgba(212, 175, 55, 0.1); padding: 25px; border-radius: 10px; margin-bottom: 30px; border-left: 4px solid var(--color-gold);">
+                            <h3 style="color: var(--color-gold); margin-bottom: 20px;">
+                                Sincronizzazione Dispositivi Mobile
+                            </h3>
+                            
+                            <p style="color: var(--color-light-text); margin-bottom: 20px; line-height: 1.6;">
+                                Dopo aver configurato tutte le impostazioni, clicca il pulsante qui sotto per aggiornare automaticamente 
+                                <strong>tutti i dispositivi mobile</strong>. I visitatori vedranno i cambiamenti al prossimo accesso.
+                            </p>
+                            
+                            <div style="text-align: center; padding: 20px;">
+                                <button onclick="forceMobileUpdate()" class="btn" style="background: #ff6b6b; color: white; padding: 15px 30px; font-size: 1.1rem;">
+                                    <i class="fas fa-sync-alt"></i> FORZA AGGIORNAMENTO MOBILE PER TUTTI
+                                </button>
+                            </div>
+                            
+                            <div class="current-date-info">
+                                <h4>Stato Aggiornamento:</h4>
+                                <p id="mobileSyncStatus">Versione: <span id="currentMobileVersion">1</span></p>
+                                <p id="lastSyncTime">Ultimo aggiornamento: <span id="lastSyncTimestamp">-</span></p>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3 style="color: var(--color-gold); margin-bottom: 15px;">Istruzioni</h3>
+                            <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: var(--shadow);">
+                                <ol style="color: var(--color-light-text); line-height: 1.8; margin-left: 20px;">
+                                    <li>Configura tutte le impostazioni desiderate nel pannello admin</li>
+                                    <li>Clicca "FORZA AGGIORNAMENTO MOBILE PER TUTTI"</li>
+                                    <li>I dispositivi mobile si aggiorneranno automaticamente al prossimo accesso</li>
+                                    <li>Gli utenti non devono fare nulla - tutto è automatico!</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
                     
                     <!-- Footer Section -->
                     <div class="admin-section" id="footerSection" style="display: none;">
@@ -1312,6 +1357,11 @@
                 // Se è la sezione Temi, carica la configurazione
                 if (this.getAttribute('data-section') === 'temi') {
                     loadCurrentTheme();
+                }
+				
+				// Se è la sezione Mobile Sync, carica lo stato
+                if (this.getAttribute('data-section') === 'mobile-sync') {
+                    loadMobileSyncSection();
                 }
             });
         });
@@ -2158,6 +2208,243 @@ function loadRSVPList() {
         
         // ========== FINE FUNZIONI RSVP ==========
 		
+		// ========== SISTEMA AGGIORNAMENTO MOBILE MIGLIORATO ==========
+
+function forceMobileUpdate() {
+    console.log('🔄 FORZATURA AGGIORNAMENTO MOBILE - Inizio...');
+    
+    const currentVersion = parseInt(localStorage.getItem('mobileCacheVersion') || '1');
+    const newVersion = currentVersion + 1;
+    
+    console.log('📱 Nuova versione:', newVersion, '(da:', currentVersion + ')');
+    
+    // Raccoglie TUTTI i dati rilevanti dal localStorage
+    const allData = {};
+    const relevantKeys = [
+        // Home
+        'birthdayPersonName', 'birthdayDetails',
+        // Invito
+        'invitoText1', 'invitoText2', 'invitoText3', 'invitoImage',
+        // Festeggiato
+        'birthdayPersonMessage', 'parentsName', 'specialGuestsName', 'profileImage',
+        // Luoghi
+        'partyLocation', 'partyAddress',
+        // Countdown
+        'birthdayEventDate', 'birthdayEventTime',
+        // Contatti
+        'contactName1', 'contactName2', 'contactPhone1', 'contactPhone2',
+        // Footer
+        'footerText',
+        // Temi
+        'birthdayTheme', 'selectedTheme', 'customColors',
+        // Configurazioni
+        'adminRSVPEmail', 'rsvpEmailConfig',
+        // Version
+        'mobileCacheVersion'
+    ];
+    
+    let savedCount = 0;
+    relevantKeys.forEach(key => {
+        const value = localStorage.getItem(key);
+        if (value) {
+            allData[key] = value;
+            savedCount++;
+            console.log('💾 Salvato:', key, '=', value.substring(0, 30) + '...');
+        }
+    });
+    
+    // Aggiungi dati aggiuntivi
+    allData['_mobileSync'] = 'true';
+    allData['_syncVersion'] = newVersion.toString();
+    allData['_syncTimestamp'] = new Date().toISOString();
+    allData['_totalKeys'] = savedCount.toString();
+    
+    console.log('📤 Invio al server:', savedCount, 'chiavi');
+    
+    // Invia al server
+    fetch('save_mobile_data.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'action=save&version=' + newVersion + '&data=' + encodeURIComponent(JSON.stringify(allData))
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Errore HTTP: ' + response.status);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            // Aggiorna versione locale
+            localStorage.setItem('mobileCacheVersion', newVersion.toString());
+            localStorage.setItem('lastMobileUpdate', new Date().toISOString());
+            
+            console.log('✅ MOBILE SYNC - Completato!', data);
+            
+            // Mostra conferma dettagliata
+            showMobileUpdateSuccess(newVersion, savedCount, data);
+            
+            // Aggiorna lo stato
+            updateMobileSyncStatus();
+        } else {
+            throw new Error(data.error || 'Errore sconosciuto dal server');
+        }
+    })
+    .catch(error => {
+        console.error('❌ MOBILE SYNC - Errore:', error);
+        showMobileUpdateError(error.message);
+    });
+}
+
+function showMobileUpdateSuccess(version, keyCount, serverData) {
+    const message = `
+        ✅ AGGIORNAMENTO MOBILE ATTIVATO!
+        
+        • Versione: ${version}
+        • Dati salvati: ${keyCount} elementi
+        • Timestamp: ${new Date().toLocaleString('it-IT')}
+        
+        I dispositivi mobile si aggiorneranno automaticamente alla prossima visita!
+        
+        ${serverData.message || ''}
+    `;
+    
+    alert(message.replace(/•/g, '•'));
+}
+
+function showMobileUpdateError(error) {
+    const message = `
+        ❌ ERRORE AGGIORNAMENTO MOBILE
+        
+        Errore: ${error}
+        
+        Controlla:
+        1. Connessione internet
+        2. Permessi server
+        3. File save_mobile_data.php
+        
+        Riprova più tardi.
+    `;
+    
+    alert(message);
+}
+
+function updateMobileSyncStatus() {
+    const version = localStorage.getItem('mobileCacheVersion') || '1';
+    const lastUpdate = localStorage.getItem('lastMobileUpdate');
+    
+    document.getElementById('currentMobileVersion').textContent = version;
+    
+    if (lastUpdate) {
+        const date = new Date(lastUpdate);
+        document.getElementById('lastSyncTimestamp').textContent = date.toLocaleString('it-IT');
+    } else {
+        document.getElementById('lastSyncTimestamp').textContent = 'Mai';
+    }
+    
+    // Controlla anche la versione sul server
+    checkServerVersion();
+}
+
+function checkServerVersion() {
+    fetch('save_mobile_data.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'action=get_version'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const serverVersion = data.version;
+            const localVersion = localStorage.getItem('mobileCacheVersion') || '1';
+            
+            let statusText = `Server: v${serverVersion} | Locale: v${localVersion}`;
+            if (parseInt(serverVersion) > parseInt(localVersion)) {
+                statusText += ' ⚠️ Da aggiornare';
+            } else if (parseInt(serverVersion) === parseInt(localVersion)) {
+                statusText += ' ✅ Sincronizzato';
+            }
+            
+            document.getElementById('mobileSyncStatus').innerHTML = statusText;
+        }
+    })
+    .catch(error => {
+        document.getElementById('mobileSyncStatus').innerHTML = 'Server: Non raggiungibile';
+    });
+}
+        
+        function saveAllDataToMobileCache() {
+            console.log('💾 Inizio salvataggio backup dati...');
+            
+            // Salva un backup di TUTTI i dati del localStorage
+            const allData = {};
+            const totalKeys = localStorage.length;
+            let savedCount = 0;
+            
+            console.log('📋 Trovati', totalKeys, 'chiavi nel localStorage');
+            
+            // Scansiona TUTTE le chiavi nel localStorage
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                
+                // Salva SOLO le chiavi relative al compleanno (escludi cache galleria, etc.)
+                if (key && (
+                    key.includes('birthday') || 
+                    key.includes('invito') || 
+                    key.includes('party') ||
+                    key.includes('contact') || 
+                    key.includes('profile') || 
+                    key.includes('parent') ||
+                    key.includes('footer') ||
+                    key.includes('theme') ||
+                    key.includes('selected') ||
+                    key.includes('admin') ||
+                    key.includes('rsvp') ||
+                    key === 'mobileCacheVersion' ||
+                    key === 'lastMobileUpdate'
+                )) {
+                    const value = localStorage.getItem(key);
+                    if (value) {
+                        allData[key] = value;
+                        savedCount++;
+                        console.log('✅ Salvato:', key, '=', value.substring(0, 50) + '...');
+                    }
+                }
+            }
+            
+            // Aggiungi anche un timestamp del backup
+            allData['_backupTimestamp'] = new Date().toISOString();
+            allData['_backupVersion'] = localStorage.getItem('mobileCacheVersion') || '1';
+            
+            localStorage.setItem('mobileDataBackup', JSON.stringify(allData));
+            console.log('💾 Backup completato:', savedCount, 'elementi salvati');
+            
+            return savedCount;
+        }
+        
+        function updateMobileSyncStatus() {
+            const version = localStorage.getItem('mobileCacheVersion') || '1';
+            const lastUpdate = localStorage.getItem('lastMobileUpdate');
+            
+            document.getElementById('currentMobileVersion').textContent = version;
+            
+            if (lastUpdate) {
+                const date = new Date(lastUpdate);
+                document.getElementById('lastSyncTimestamp').textContent = date.toLocaleString('it-IT');
+            } else {
+                document.getElementById('lastSyncTimestamp').textContent = 'Mai';
+            }
+        }
+        
+        // Carica lo stato quando si apre la sezione
+        function loadMobileSyncSection() {
+            updateMobileSyncStatus();
+        }
+		
 		// ========== FUNZIONI PER GESTIONE IMMAGINI DEFAULT ==========
 
 // Carica le immagini default
@@ -2576,6 +2863,72 @@ function confirmDelete() {
             
             // Debug
             debugSave('footer');
+        }
+		 // Salva dati Footer
+        function saveFooterData() {
+            localStorage.setItem('footerText', document.getElementById('footerText').value);
+            
+            // Mostra messaggio di successo
+            document.getElementById('footerSuccess').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('footerSuccess').style.display = 'none';
+            }, 3000);
+            
+            // Debug
+            debugSave('footer');
+        }
+
+        // ========== FUNZIONI TEST CONNESSIONE MOBILE SYNC ==========
+
+        // Funzione per testare la connessione al server
+        function testMobileSyncConnection() {
+            console.log('🔍 Test connessione server...');
+            
+            fetch('save_mobile_data.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=get_version'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('✅ Connessione server: OK - Versione:', data.version);
+                    alert('✅ Connessione server OK!\nVersione: ' + data.version);
+                } else {
+                    console.log('❌ Connessione server: Errore');
+                    alert('❌ Errore connessione server');
+                }
+            })
+            .catch(error => {
+                console.error('❌ Connessione server: Fallita', error);
+                alert('❌ Connessione server fallita: ' + error.message);
+            });
+        }
+
+        // Aggiungi questo pulsante di test nella sezione mobile-sync
+        function addTestButtonToMobileSection() {
+            const mobileSection = document.getElementById('mobile-syncSection');
+            if (mobileSection) {
+                const testButton = document.createElement('button');
+                testButton.className = 'btn';
+                testButton.style.backgroundColor = '#2196F3';
+                testButton.style.marginLeft = '10px';
+                testButton.innerHTML = '<i class="fas fa-wifi"></i> Test Connessione';
+                testButton.onclick = testMobileSyncConnection;
+                
+                const actionsDiv = mobileSection.querySelector('.rsvp-actions');
+                if (actionsDiv) {
+                    actionsDiv.appendChild(testButton);
+                }
+            }
+        }
+
+        // Chiamare questa funzione quando la sezione mobile viene caricata
+        function loadMobileSyncSection() {
+            updateMobileSyncStatus();
+            addTestButtonToMobileSection();
         }
     </script>
 </body>
