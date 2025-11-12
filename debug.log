@@ -1,0 +1,5 @@
+=== DELETE REQUEST ===
+Time: 2025-11-12 09:06:01
+POST Data: {"file_path":"img/gallery-default-1.jpg","is_default":true}
+Response: {"success":true,"debug":{"raw_input":"{\"file_path\":\"img\/gallery-default-1.jpg\",\"is_default\":true}","json_last_error":0,"json_last_error_msg":"No error","received_file_path":"img\/gallery-default-1.jpg","received_is_default":true,"file_exists":true,"file_exists_realpath":true,"real_path":"\/var\/www\/vhosts\/tutorialbay.it\/httpdocs\/compleanno\/img\/gallery-default-1.jpg","allowed_base":"\/var\/www\/vhosts\/tutorialbay.it\/httpdocs\/compleanno\/img","permissions":"0644","is_writable":true,"deletion_success":true,"file_still_exists":false},"message":"File eliminato con successo"}
+

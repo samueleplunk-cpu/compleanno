@@ -869,25 +869,7 @@
             <!-- Le immagini default verranno caricate dinamicamente qui -->
         </div>
         
-        <!-- Upload nuova immagine default -->
-        <div class="upload-default-section" style="margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(212, 175, 55, 0.3);">
-            <h4 style="color: var(--color-text); margin-bottom: 15px;">Sostituisci Immagine Default</h4>
-            <div style="display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap;">
-                <div style="flex: 1;">
-                    <label class="form-label" for="defaultImageSelect">Seleziona immagine da sostituire</label>
-                    <select id="defaultImageSelect" class="form-select" style="width: 100%;">
-                        <option value="">Seleziona un'immagine default</option>
-                    </select>
-                </div>
-                <div style="flex: 1;">
-                    <label class="form-label" for="newDefaultImage">Nuova immagine</label>
-                    <input type="file" id="newDefaultImage" class="form-input" accept="image/jpeg,image/jpg,image/png,image/gif">
-                </div>
-                <button class="btn" onclick="replaceDefaultImage()" style="flex-shrink: 0;">
-                    <i class="fas fa-sync-alt"></i> Sostituisci
-                </button>
-            </div>
-        </div>
+        <!-- SEZIONE "SOSTITUISCI IMMAGINE DEFAULT" RIMOSSA -->
     </div>
     
     <!-- Statistiche -->
@@ -2016,32 +1998,80 @@
             });
         }
 
-        // Funzione per confermare eliminazione
-        function confirmDelete() {
-            if (!photoToDelete) return;
+        // Funzione per confermare eliminazione - DEBUG ULTRA DETTAGLIATO
+function confirmDelete() {
+    if (!photoToDelete) {
+        console.error("❌ photoToDelete è null");
+        return;
+    }
+    
+    const fileToDelete = { ...photoToDelete };
+    console.log("=== 🗑️ INIZIO ELIMINAZIONE ===");
+    console.log("File da eliminare:", fileToDelete);
+    
+    // Prepara i dati per la richiesta
+    const requestData = {
+        file_path: fileToDelete.path,
+        is_default: fileToDelete.isDefault || false
+    };
+    
+    console.log("📦 Dati inviati al server:", requestData);
+    
+    fetch('delete_gallery.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData)
+    })
+    .then(response => {
+        console.log("📡 Response HTTP:", {
+            status: response.status,
+            statusText: response.statusText,
+            ok: response.ok,
+            headers: Object.fromEntries(response.headers.entries())
+        });
+        return response.json();
+    })
+    .then(data => {
+        console.log("📨 Risposta JSON dal server:", data);
+        
+        if (data.success) {
+            console.log("✅ Server reports SUCCESS");
             
-            fetch('delete_gallery.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ file_path: photoToDelete.path })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    closeDeleteModal();
-                    loadGallery();
-                    showTempMessage('Foto eliminata con successo!', 'success');
-                } else {
-                    showTempMessage(`Errore nell'eliminazione: ${data.error}`, 'error');
-                }
-            })
-            .catch(error => {
-                console.error('Errore:', error);
-                showTempMessage('Errore di connessione', 'error');
-            });
+            // Verifica IMMEDIATA se il file è stato eliminato
+            return fetch('verify_deletion.php')
+                .then(response => response.json())
+                .then(verification => {
+                    console.log("🔍 Verifica stato files:", verification);
+                    
+                    const deletedFileInfo = verification.find(file => file.file === fileToDelete.path);
+                    console.log("📊 Stato file eliminato:", deletedFileInfo);
+                    
+                    if (deletedFileInfo && deletedFileInfo.exists === "SI") {
+                        console.error("❌ FILE ANCORA PRESENTE DOPO ELIMINAZIONE!");
+                        showTempMessage('ERRORE: Il file non è stato eliminato dal server', 'error');
+                    } else {
+                        console.log("🎉 FILE ELIMINATO CON SUCCESSO!");
+                        closeDeleteModal();
+                        loadGallery();
+                        showTempMessage('Immagine eliminata con successo!', 'success');
+                    }
+                });
+        } else {
+            console.error("❌ Server reports ERROR:", data.error);
+            showTempMessage(`Errore: ${data.error}`, 'error');
         }
+    })
+    .catch(error => {
+        console.error('💥 Errore di connessione:', error);
+        showTempMessage('Errore di connessione: ' + error.message, 'error');
+    })
+    .finally(() => {
+        photoToDelete = null;
+        console.log("=== 🏁 FINE ELIMINAZIONE ===");
+    });
+}
 
         // Funzione per scaricare foto
         function downloadPhoto(filePath, fileName) {
@@ -2447,20 +2477,30 @@ function checkServerVersion() {
 		
 		// ========== FUNZIONI PER GESTIONE IMMAGINI DEFAULT ==========
 
-// Carica le immagini default
+// Carica le immagini default - VERSIONE CORRETTA
 function loadDefaultImages() {
     fetch('get_gallery.php')
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                const defaultImages = data.photos.filter(photo => photo.isDefault);
+                // CORREZIONE: identificazione corretta delle immagini default
+                const defaultImages = data.photos.filter(photo => 
+                    photo.isDefault || photo.fullPath.includes('/img/') || photo.name.includes('default')
+                );
                 displayDefaultImages(defaultImages);
-                populateDefaultImageSelect(defaultImages);
                 updateStats(data);
             }
         })
         .catch(error => {
             console.error('Errore nel caricamento immagini default:', error);
+            // Fallback: mostra messaggio di errore
+            const defaultGrid = document.getElementById('defaultGalleryGrid');
+            defaultGrid.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: var(--color-light-text);">
+                    <p>Errore nel caricamento immagini default</p>
+                    <button class="btn" onclick="loadDefaultImages()">Riprova</button>
+                </div>
+            `;
         });
 }
 
@@ -2516,79 +2556,12 @@ function createDefaultImageElement(image) {
     return div;
 }
 
-// Popola il select per la sostituzione immagini default
-function populateDefaultImageSelect(images) {
-    const select = document.getElementById('defaultImageSelect');
-    select.innerHTML = '<option value="">Seleziona un\'immagine default</option>';
-    
-    images.forEach(image => {
-        const option = document.createElement('option');
-        option.value = image.fullPath;
-        option.textContent = image.name;
-        select.appendChild(option);
-    });
-}
-
-// Sostituisci immagine default
-function replaceDefaultImage() {
-    const select = document.getElementById('defaultImageSelect');
-    const fileInput = document.getElementById('newDefaultImage');
-    
-    const selectedImage = select.value;
-    const newImageFile = fileInput.files[0];
-    
-    if (!selectedImage) {
-        alert('Seleziona un\'immagine default da sostituire.');
-        return;
-    }
-    
-    if (!newImageFile) {
-        alert('Seleziona una nuova immagine.');
-        return;
-    }
-    
-    // Validazione file
-    if (!newImageFile.type.startsWith('image/')) {
-        alert('Il file selezionato non è un\'immagine valida.');
-        return;
-    }
-    
-    if (newImageFile.size > 5 * 1024 * 1024) {
-        alert('L\'immagine non deve superare 5MB.');
-        return;
-    }
-    
-    const formData = new FormData();
-    formData.append('old_image_path', selectedImage);
-    formData.append('new_image', newImageFile);
-    
-    fetch('replace_default_image.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showTempMessage('Immagine default sostituita con successo!', 'success');
-            loadDefaultImages();
-            loadGallery(); // Ricarica tutta la galleria
-            fileInput.value = ''; // Reset file input
-        } else {
-            showTempMessage(`Errore nella sostituzione: ${data.error}`, 'error');
-        }
-    })
-    .catch(error => {
-        console.error('Errore:', error);
-        showTempMessage('Errore di connessione', 'error');
-    });
-}
-
-// Modal per eliminazione immagine default
+// Modal per eliminazione immagine default - VERSIONE CORRETTA
 function openDeleteDefaultModal(filePath, fileName) {
     photoToDelete = { 
         path: filePath, 
         name: fileName,
-        isDefault: true 
+        isDefault: true  // Questo parametro è fondamentale
     };
     document.getElementById('deleteMessage').textContent = `Sei sicuro di voler eliminare l'immagine default "${fileName}"?`;
     document.getElementById('deleteImagePreview').src = filePath;
@@ -2634,36 +2607,6 @@ function loadGallery() {
             console.error('Errore:', error);
             showGalleryError('Errore di connessione');
         });
-}
-
-// Modifica la funzione confirmDelete per gestire immagini default
-function confirmDelete() {
-    if (!photoToDelete) return;
-    
-    fetch('delete_gallery.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-            file_path: photoToDelete.path,
-            is_default: photoToDelete.isDefault || false
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            closeDeleteModal();
-            loadGallery();
-            showTempMessage(photoToDelete.isDefault ? 'Immagine default eliminata con successo!' : 'Foto eliminata con successo!', 'success');
-        } else {
-            showTempMessage(`Errore nell'eliminazione: ${data.error}`, 'error');
-        }
-    })
-    .catch(error => {
-        console.error('Errore:', error);
-        showTempMessage('Errore di connessione', 'error');
-    });
 }
         
         // ========== FUNZIONI DI SALVATAGGIO MODIFICATE PER ALLINEARE CON INDEX.HTML ==========

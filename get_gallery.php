@@ -64,18 +64,6 @@ function getDefaultImages() {
                 'thumbnail' => $filePath,
                 'isDefault' => true
             ];
-        } else {
-            $placeholderPath = createDefaultImage($defaultDir, $defaultFile, $index + 1);
-            if ($placeholderPath) {
-                $defaultImages[] = [
-                    'name' => $defaultFile,
-                    'size' => '0.5 MB',
-                    'date' => date('d/m/Y H:i'),
-                    'fullPath' => $placeholderPath,
-                    'thumbnail' => $placeholderPath,
-                    'isDefault' => true
-                ];
-            }
         }
     }
     
