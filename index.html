@@ -1555,13 +1555,10 @@ function loadMobileDataFromServer() {
             console.log('✅ MOBILE SYNC - Aggiornamento completato!', updatedCount, 'elementi aggiornati');
             
             // Mostra notifica
-            showMobileUpdateNotification(updatedCount, serverVersion);
-            
-            // Ricarica la pagina per applicare i cambiamenti
-            setTimeout(() => {
-                console.log('🔄 MOBILE SYNC - Ricarico pagina...');
-                window.location.reload();
-            }, 2000);
+            // Applica aggiornamenti silenziosamente
+showMobileUpdateNotification(updatedCount, serverVersion);
+
+// La ricarica della pagina ora è gestita dentro showMobileUpdateNotification
             
         } else {
             console.log('ℹ️ MOBILE SYNC - Nessun dato disponibile sul server');
@@ -1582,62 +1579,88 @@ function startMobileSyncPolling() {
 }
 
 function showMobileUpdateNotification(updateCount, newVersion) {
-    const notification = document.createElement('div');
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #4CAF50;
-        color: white;
-        padding: 15px 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        z-index: 10000;
-        font-family: Arial, sans-serif;
-        font-size: 14px;
-        max-width: 300px;
-        animation: slideIn 0.5s ease;
-    `;
+    // VERSIONE SILENZIOSA - Nessun popup visibile all'utente
+    console.log('🔄 Aggiornamento completato:', {
+        elementi_aggiornati: updateCount,
+        versione: newVersion
+    });
     
-    notification.innerHTML = `
-        <strong>🔄 Aggiornamento Completato!</strong><br>
-        <div style="margin-top: 8px;">
-        • ${updateCount} impostazioni aggiornate<br>
-        • Versione: ${newVersion}<br>
-        • Ricarico la pagina...
-        </div>
-    `;
+    // Applica immediatamente i nuovi dati senza mostrare notifiche
+    applyLiveUpdates();
     
-    document.body.appendChild(notification);
-    
-    // Stile per l'animazione
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-    `;
-    document.head.appendChild(style);
-    
+    // Ricarica la pagina silenziosamente dopo un breve delay
     setTimeout(() => {
-        notification.style.animation = 'slideOut 0.5s ease forwards';
+        console.log('🔄 Ricarico pagina in background...');
+        window.location.reload();
+    }, 1000);
+}
+
+function applyLiveUpdates() {
+    console.log('🎯 Applicazione aggiornamenti in tempo reale...');
+    
+    // Aggiorna i dati critici senza ricaricare tutta la pagina
+    try {
+        // HOME
+        const birthdayPersonName = localStorage.getItem('birthdayPersonName');
+        const birthdayDetails = localStorage.getItem('birthdayDetails');
         
-        const slideOutStyle = document.createElement('style');
-        slideOutStyle.textContent = `
-            @keyframes slideOut {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(slideOutStyle);
+        if (birthdayPersonName) {
+            document.getElementById('birthdayPersonName').textContent = birthdayPersonName;
+            document.getElementById('birthdayPersonCardName').textContent = birthdayPersonName.split(' ')[0] + ' ♡';
+        }
         
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.remove();
-            }
-        }, 500);
-    }, 4000);
+        if (birthdayDetails) {
+            document.getElementById('birthdayDetails').textContent = birthdayDetails;
+        }
+        
+        // INVITO
+        const invitoText1 = localStorage.getItem('invitoText1');
+        const invitoText2 = localStorage.getItem('invitoText2');
+        const invitoText3 = localStorage.getItem('invitoText3');
+        
+        if (invitoText1) document.getElementById('invitoText1').textContent = invitoText1;
+        if (invitoText2) document.getElementById('invitoText2').textContent = invitoText2;
+        if (invitoText3) document.getElementById('invitoText3').textContent = invitoText3;
+        
+        // FESTEGGIATI
+        const birthdayPersonMessage = localStorage.getItem('birthdayPersonMessage');
+        const parentsName = localStorage.getItem('parentsName');
+        const specialGuestsName = localStorage.getItem('specialGuestsName');
+        
+        if (birthdayPersonMessage) document.getElementById('birthdayPersonMessage').textContent = birthdayPersonMessage;
+        if (parentsName) document.getElementById('parentsName').textContent = parentsName;
+        if (specialGuestsName) document.getElementById('specialGuestsName').textContent = specialGuestsName;
+        
+        // LUOGHI
+        const partyLocation = localStorage.getItem('partyLocation');
+        const partyAddress = localStorage.getItem('partyAddress');
+        
+        if (partyLocation) document.getElementById('partyLocation').textContent = partyLocation;
+        if (partyAddress) document.getElementById('partyAddress').textContent = partyAddress;
+        
+        // CONTATTI
+        const contactName1 = localStorage.getItem('contactName1');
+        const contactName2 = localStorage.getItem('contactName2');
+        const contactPhone1 = localStorage.getItem('contactPhone1');
+        const contactPhone2 = localStorage.getItem('contactPhone2');
+        
+        if (contactName1) document.getElementById('contactName1').textContent = contactName1;
+        if (contactName2) document.getElementById('contactName2').textContent = contactName2;
+        if (contactPhone1) document.getElementById('contactPhone1').textContent = contactPhone1;
+        if (contactPhone2) document.getElementById('contactPhone2').textContent = contactPhone2;
+        
+        // FOOTER
+        const footerText = localStorage.getItem('footerText');
+        if (footerText) document.getElementById('footerText').textContent = footerText;
+        
+        // IMMAGINI
+        loadImagesSafely();
+        
+        console.log('✅ Aggiornamenti applicati in tempo reale');
+        
+    } catch (error) {
+        console.error('❌ Errore nell\'applicazione aggiornamenti:', error);
+    }
 }
 	
         // ========== DATI DI DEFAULT PER PRIMO ACCESSO ==========
